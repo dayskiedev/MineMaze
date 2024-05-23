@@ -1,12 +1,14 @@
 #include <iostream>
 
-void printStartText(void){
+void printStartText(void)
+{
     std::cout << std::endl;
     std::cout << "Welcome to MineCraft MazeRunner!" << std::endl;
     std::cout << "--------------------------------" << std::endl;
 }
 
-void printMainMenu(void){
+void printMainMenu(void)
+{
     std::cout << std::endl;
     std::cout << "------------- MAIN MENU -------------" << std::endl;
     std::cout << "1) Create a Maze" << std::endl;
@@ -18,7 +20,8 @@ void printMainMenu(void){
     std::cout << "Enter Menu item to continue: " << std::endl;
 }
 
-void printGenerateMazeMenu(void){
+void printGenerateMazeMenu(void)
+{
     std::cout << std::endl;
     std::cout << "------------- CREATE A MAZE -------------" << std::endl;
     std::cout << "1) Read Maze from terminal" << std::endl;
@@ -28,7 +31,8 @@ void printGenerateMazeMenu(void){
     std::cout << "Enter Menu item to continue: " << std::endl;
 }
 
-void printSolveMazeMenu(void){
+void printSolveMazeMenu(void)
+{
     std::cout << std::endl;
     std::cout << "------------- SOLVE MAZE -------------" << std::endl;
     std::cout << "1) Solve Manually" << std::endl;
@@ -38,20 +42,19 @@ void printSolveMazeMenu(void){
     std::cout << "Enter Menu item to continue: " << std::endl;
 }
 
-
-void printTeamInfo(void){
+void printTeamInfo(void)
+{
     std::cout << std::endl;
     std::cout << "Team members:" << std::endl;
 
-    //TODO: change this part to reflect your team**********
-    std::cout << "\t [1] Ruwan Tennakoon (ruwan.tennekoon@rmit.edu.au)" << std::endl;
+    std::cout << "\t [1] Darcy Platt (s3657395@student.rmit.edu.au)" << std::endl;
     std::cout << "\t [2] Steven Korevaar (steven.korevaar@rmit.edu.au)" << std::endl;
-    //*************
 
     std::cout << std::endl;
 }
 
-void printExitMassage(void){
+void printExitMassage(void)
+{
     std::cout << std::endl;
     std::cout << "The End!" << std::endl;
     std::cout << std::endl;
