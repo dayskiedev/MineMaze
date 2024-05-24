@@ -1,5 +1,25 @@
 #include <iostream>
 
+bool sanatise_input(int menuLen, int& num) {
+    std::string input;
+    std::cin >> input;
+
+    for (long unsigned int i = 0; i < input.length(); ++i) {
+        if (!isdigit(input[i])) { 
+            std::cout << "Input must be an intger!" << std::endl;
+            return false; 
+            } // if input contains a string we dont want to treat it like a number
+    }
+
+    int intInput = std::stoi(input);
+    if(intInput <= 0 || intInput >   menuLen) { 
+        std::cout << "Input must be a number between 1 and " << menuLen << "!" << std::endl;
+        return false; 
+    }
+
+    num = intInput;
+    return true;
+}
 
 void printStartText(void)
 {
@@ -19,6 +39,7 @@ void printMainMenu(void)
     std::cout << "5) Exit" << std::endl;
     std::cout << std::endl;
     std::cout << "Enter Menu item to continue: " << std::endl;
+
 }
 
 void printGenerateMazeMenu(void)
