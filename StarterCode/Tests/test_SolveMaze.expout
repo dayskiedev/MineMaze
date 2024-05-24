@@ -1,0 +1,57 @@
+
+Welcome to MineCraft MazeRunner!
+--------------------------------
+
+------------- MAIN MENU -------------
+1) Create a Maze
+2) Build Maze in MineCraft
+3) Solve Maze
+4) Show Team Information
+5) Exit
+
+Enter Menu item to continue: 
+
+------------- SOLVE MAZE -------------
+1) Solve Manually
+2) Show Escape Route
+3) Back
+
+Enter Menu item to continue: 
+
+
+Showing Escape Route:
+
+Step [1]: (12, 35, 3)
+Step [2]: (13, 35, 3)
+Step [3]: (13, 35, 4)
+Step [4]: (13, 35, 3)
+Step [5]: (14, 35, 3)
+Step [6]: (15, 35, 3)
+Step [7]: (16, 35, 3)
+Step [8]: (16, 35, 4)
+Step [9]: (16, 35, 5)
+Step [10]: (16, 35, 4)
+Step [11]: (17, 35, 4)
+Step [12]: (17, 35, 5)
+
+------------- SOLVE MAZE -------------
+1) Solve Manually
+2) Show Escape Route
+3) Back
+
+Enter Menu item to continue: 
+
+
+Welcome to MineCraft MazeRunner!
+--------------------------------
+
+------------- MAIN MENU -------------
+1) Create a Maze
+2) Build Maze in MineCraft
+3) Solve Maze
+4) Show Team Information
+5) Exit
+
+Enter Menu item to continue: 
+
+The End!
