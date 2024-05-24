@@ -18,21 +18,26 @@ enum States{
 };
 
 int main(void){
-
+    mcpp::MinecraftConnection mc; 
     bool mode = NORMAL_MODE;
     //read Mode
-
+    if(!mode) {
+        mc.postToChat("RUNNING IN NORMAL MODE");
+    }
+    if(mode) {
+        mc.postToChat("RUNNING IN TEST MODE");
+    }
     
-
-    mcpp::MinecraftConnection mc; 
     mc.doCommand("time set day"); 
 
+    std::string input;
     States curState = ST_Main;
+    printStartText();
 
     //State machine for menu        
     while (curState != ST_Exit)
     {
-        //Do something
+
     }
 
     printExitMassage();
