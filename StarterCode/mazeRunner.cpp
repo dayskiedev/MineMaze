@@ -18,11 +18,11 @@ enum States{
     ST_Exit = 5
 };
 
-int main(void){
+int main(int argc, char *argv[]){
     mcpp::MinecraftConnection mc; 
-
     bool mode = NORMAL_MODE;
-    //read Mode
+    if(argc > 1) { mode = compareCharStr(argv[1], "-testmode"); } 
+
     if(!mode) { mc.postToChat("RUNNING IN NORMAL MODE"); }
     if(mode) { mc.postToChat("RUNNING IN TEST MODE"); }
     

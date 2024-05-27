@@ -1,5 +1,14 @@
 #include <iostream>
 
+// as the name implies, this comppares a array of chars to a string char by char
+// because otherwise i get warned about using char[] = str which c++ doesnt like :(
+bool compareCharStr(char *chrArr, std::string str) { 
+    for(long unsigned int i = 0; i < str.length(); ++i) {
+        if(chrArr[i] != str[i]) { return false; }
+    }
+    return true;
+}
+
 bool sanatiseInput(int menuLen, int& num) {
     std::string input;
     std::cin >> input;
@@ -10,13 +19,13 @@ bool sanatiseInput(int menuLen, int& num) {
             return false; 
             } // if input contains a string we dont want to treat it like a number
     }
-
+    // if we get past this, it means what we entered must be a number, so we can safely convert the str to an int
     int intInput = std::stoi(input);
     if(intInput <= 0 || intInput >   menuLen) { 
         std::cout << "Input must be a number between 1 and " << menuLen << "!" << std::endl;
         return false; 
     }
-
+    // if we reach this stage, we know the input is a number between the range set by the menu
     num = intInput;
     return true;
 }
