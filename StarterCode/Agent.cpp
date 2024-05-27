@@ -8,12 +8,12 @@ Agent::~Agent()
 {
 }
 
-Left-Hand follow algorithm
+//Left-Hand follow algorithm
 
-player coordinates = (x, y, z)
+//player coordinates = (x, y, z)
 // Considering player is facing forward in these coordinates
 
-if (x + 1 == Air)
+//if (x + 1 == Air)
 
 // if (left is empty)
 //  go left

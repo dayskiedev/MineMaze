@@ -20,14 +20,11 @@ enum States{
 
 int main(void){
     mcpp::MinecraftConnection mc; 
+
     bool mode = NORMAL_MODE;
     //read Mode
-    if(!mode) {
-        mc.postToChat("RUNNING IN NORMAL MODE");
-    }
-    if(mode) {
-        mc.postToChat("RUNNING IN TEST MODE");
-    }
+    if(!mode) { mc.postToChat("RUNNING IN NORMAL MODE"); }
+    if(mode) { mc.postToChat("RUNNING IN TEST MODE"); }
     
     mc.doCommand("time set day"); 
 
@@ -35,34 +32,47 @@ int main(void){
     States curState = ST_Main;
     printStartText();
 
-    int num = 0;
+    int stateNum = 0;
     //State machine for menu        
     while (curState != ST_Exit)
     {
         if(curState == ST_Main) {
             do {
                 printMainMenu();  
-            } while(!sanatise_input(5, num));
-            curState = States(num);
+            } while(!sanatiseInput(5, stateNum));
+            curState = States(stateNum);
         }
 
-        if(curState ==  ST_Creators){
+        if(curState == ST_CreateMaze){
             do {
                 printGenerateMazeMenu();
-            } while (!sanatise_input(3, num));
-            
+            } while (!sanatiseInput(3, stateNum));
+
+            // due to the input being sanatised it should only ever be 1-3 when it reaches here
             // move to create maze functions 
+            if(stateNum == 1) { std::cout << "move to function to generate a maze from the terminal" << std::endl; }
             // move to create maze functions random
+            if(stateNum == 2) { std::cout << "move to function to generate random maze from height width" << std::endl; }
+            if(stateNum == 3) { curState = ST_Main; }
         }
 
-        if( curState == ST_Creators) {
+        if(curState == ST_BuildMaze) {
+            std::cout << "BUILDING MAZE..." << std::endl;
+            curState = ST_Main;
+        }
+
+        if(curState == ST_SolveMaze) {
+            std::cout << "SOLVING MAZE..." << std::endl;
+            curState = ST_Main;
+        }
+
+        if(curState == ST_Creators) {
             printTeamInfo();
             curState = ST_Main;
         }
     }
 
     printExitMassage();
-
 
     return EXIT_SUCCESS;
 

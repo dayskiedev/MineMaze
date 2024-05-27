@@ -1,6 +1,6 @@
 #include <iostream>
 
-bool sanatise_input(int menuLen, int& num) {
+bool sanatiseInput(int menuLen, int& num) {
     std::string input;
     std::cin >> input;
 
