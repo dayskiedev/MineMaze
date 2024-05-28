@@ -5,6 +5,7 @@
 #include "menuUtils.h"
 #include "Maze.h"
 #include "Agent.h"
+#include "MazeUtil.h"
 
 #define NORMAL_MODE 0
 #define TESTING_MODE 1
@@ -22,11 +23,22 @@ int main(int argc, char *argv[]){
     mcpp::MinecraftConnection mc; 
     bool mode = NORMAL_MODE;
     if(argc > 1) { mode = compareCharStr(argv[1], "-testmode"); } 
+    //delete argv; // since we dont need the arguments anymore we can free up the memory
 
     if(!mode) { mc.postToChat("RUNNING IN NORMAL MODE"); }
     if(mode) { mc.postToChat("RUNNING IN TEST MODE"); }
     
     mc.doCommand("time set day"); 
+
+
+    //testing maze generation
+    MazeUtil* mu = new MazeUtil;
+    mu->CreateStructureTerminal();
+    mu->TestFill('x');
+    mu->TestPrintMaze();
+
+    // // stop
+    
 
     std::string input;
     States curState = ST_Main;
@@ -50,7 +62,9 @@ int main(int argc, char *argv[]){
 
             // due to the input being sanatised it should only ever be 1-3 when it reaches here
             // move to create maze functions 
-            if(stateNum == 1) { std::cout << "move to function to generate a maze from the terminal" << std::endl; }
+            if(stateNum == 1) { 
+                std::cout << "move to function to generate a maze from the terminal" << std::endl;
+                }
             // move to create maze functions random
             if(stateNum == 2) { std::cout << "move to function to generate random maze from height width" << std::endl; }
             if(stateNum == 3) { curState = ST_Main; }

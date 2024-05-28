@@ -13,17 +13,13 @@ public:
     Maze(mcpp::Coordinate basePoint, unsigned int xlen,
                                         unsigned int zlen,
                                         bool mode);
-
     /**
      * void Maze::flattenTerrain(); TODO?? might need to implement this function
      * but also could also be implemented in maze constructor?
      */
 
     // header file doesnt need Maze:: before functions as this is where the function is created not where they're referenced/called -B
-
-    std::vector<std::vector<char>> readMaze(const std::string& mazeStr);
-
-    void buildMaze(std::vector<std::vector<char>>& mazeChars);
+    // cant use vectors
     ~Maze();
 
 private:

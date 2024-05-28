@@ -30,6 +30,7 @@ bool sanatiseInput(int menuLen, int& num) {
     return true;
 }
 
+
 void printStartText(void)
 {
     std::cout << std::endl;
