@@ -2,6 +2,7 @@
 #define ASSIGN3_AGENT_H
 
 #include <iostream>
+#include <cstdlib> //Is this permitted?
 #include <mcpp/mcpp.h>
 
 #define MOVE_XPLUS mcpp::Coordinate(1,0,0)
@@ -27,7 +28,7 @@ class Agent
 public:
     Agent(mcpp::Coordinate startLoc);
     ~Agent();
-    mcpp::Coordinate getStartLocation(void) const;
+    mcpp::Coordinate getPlayerLocation(void) const;
     mcpp::Coordinate Agent::randLocation(void);
 
 
@@ -35,7 +36,6 @@ private:
     /* data */
     mcpp::MinecraftConnection mc;
     mcpp::Coordinate startLoc;
-    mcpp::Coordinate base;
 
 };
 
