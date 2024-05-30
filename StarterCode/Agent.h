@@ -27,10 +27,15 @@ class Agent
 public:
     Agent(mcpp::Coordinate startLoc);
     ~Agent();
+    mcpp::Coordinate getStartLocation(void) const;
+    mcpp::Coordinate Agent::randLocation(void);
+
 
 private:
     /* data */
     mcpp::MinecraftConnection mc;
+    mcpp::Coordinate startLoc;
+    mcpp::Coordinate base;
 
 };
 
