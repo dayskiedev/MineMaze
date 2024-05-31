@@ -30,15 +30,7 @@ int main(int argc, char *argv[]){
     
     mc.doCommand("time set day"); 
 
-
-    //testing maze generation
-    MazeUtil* mu = new MazeUtil;
-    mu->CreateStructureTerminal();
-    mu->TestFill('x');
-    mu->TestPrintMaze();
-
-    // // stop
-    
+    MazeUtil mu;
 
     std::string input;
     States curState = ST_Main;
@@ -64,6 +56,7 @@ int main(int argc, char *argv[]){
             // move to create maze functions 
             if(stateNum == 1) { 
                 std::cout << "move to function to generate a maze from the terminal" << std::endl;
+                    mu.CreateStructureTerminal();
                 }
             // move to create maze functions random
             if(stateNum == 2) { std::cout << "move to function to generate random maze from height width" << std::endl; }
@@ -77,6 +70,7 @@ int main(int argc, char *argv[]){
 
         if(curState == ST_SolveMaze) {
             std::cout << "SOLVING MAZE..." << std::endl;
+
             curState = ST_Main;
         }
 
