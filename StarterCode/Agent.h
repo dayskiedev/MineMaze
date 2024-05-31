@@ -26,10 +26,10 @@ class Agent
 {
 
 public:
-    Agent(mcpp::Coordinate startLoc);
+    Agent(void);
     ~Agent();
-    mcpp::Coordinate getPlayerLocation(void) const;
-    mcpp::Coordinate randLocation(void);
+    void placePlayer(mcpp::Coordinate basePoint);
+    void solveMaze();
 
 
 private:
