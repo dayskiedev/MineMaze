@@ -9,7 +9,7 @@ void MazeUtil::CreateStructureTerminal() {
     std::cout << "In Minecraft, navigate to where you need the maze to be built and type - done" << std::endl;
     std::string input;
     std::cin >> input; 
-    while (!input.compare("done"))
+    while (input.compare("done"))
     {
         std::cout << "Invalid input! please enter 'done' when you have found a desirable location!" << std::endl;
         std::cin >> input;

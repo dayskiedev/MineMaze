@@ -62,12 +62,18 @@ int main(int argc, char *argv[]){
         }
 
         if(curState == ST_BuildMaze) {
-            std::cout << "BUILDING MAZE..." << std::endl;
+            std::cout << "BUILDING MAZE..." << std::endl; 
             curState = ST_Main;
         }
 
         if(curState == ST_SolveMaze) {
-            std::cout << "SOLVING MAZE..." << std::endl;
+            do {
+                printSolveMazeMenu();
+            } while(!sanatiseInput(3, stateNum));
+
+            if(stateNum == 1) { std::cout << "Solve Manually" << std::endl; }
+            if(stateNum == 2) { std::cout << "Show escape route" << std::endl; }
+            if(stateNum == 3) { curState = ST_Main; }
 
             curState = ST_Main;
         }
