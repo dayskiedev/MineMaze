@@ -22,26 +22,8 @@ void Agent::solveMaze() {
 
     mcpp::Coordinate startSolvePoint = mc.getPlayerPosition();
 
-    
-
+    //While
 }
-
-        // Normal Mode
-    // if(state num = solveMaze manually) {
-
-    // Place player randomly inside the maze
-    //}
-
-
-        // Test Mode
-    // if(state num = solveMaze manually) {
-
-    // Place player at the furthest point from the exit
-    //}
-
-
-
-
     // if(state num = solveSolution) {
 
     // Left-Hand follow algorithm
