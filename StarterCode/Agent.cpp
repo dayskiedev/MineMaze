@@ -40,11 +40,6 @@ mcpp::Coordinate Agent::randLocation(void) {
 }
 
 */ 
-
-
-
-
-
         // Normal Mode
     // if(state num = solveMaze manually) {
 
