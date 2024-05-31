@@ -53,12 +53,10 @@ int main(int argc, char *argv[]){
             } while (!sanatiseInput(3, stateNum));
 
             // due to the input being sanatised it should only ever be 1-3 when it reaches here
-            // move to create maze functions 
             if(stateNum == 1) { 
-                std::cout << "move to function to generate a maze from the terminal" << std::endl;
-                    mu.CreateStructureTerminal();
-                }
-            // move to create maze functions random
+                mu.CreateStructureTerminal(); 
+                curState = ST_Main;
+            }
             if(stateNum == 2) { std::cout << "move to function to generate random maze from height width" << std::endl; }
             if(stateNum == 3) { curState = ST_Main; }
         }

@@ -16,36 +16,36 @@ Agent::~Agent()
 }
 
 // Get player (x, y, z)
-mcpp::Coordinate Agent::getPlayerLocation(void) const {  
-    mcpp::MinecraftConnection mc;
-    mcpp::Coordinate playerLocation;  
+// mcpp::Coordinate Agent::getPlayerLocation(void) const {  
+//     mcpp::MinecraftConnection mc;
+//     mcpp::Coordinate playerLocation;  
 
-    mcpp::Coordinate playerLocation = mc.getPlayerPosition(); 
+//     mcpp::Coordinate playerLocation = mc.getPlayerPosition(); 
 
-    return playerLocation;
-}
+//     return playerLocation;
+// }
 
-// Generate a random (x, y, z) and will teleport player to it
-mcpp::Coordinate Agent::randLocation(void) {
-    mcpp::MinecraftConnection mc;
-    mcpp::Coordinate randCord;  
+// // Generate a random (x, y, z) and will teleport player to it
+// mcpp::Coordinate Agent::randLocation(void) {
+//     mcpp::MinecraftConnection mc;
+//     mcpp::Coordinate randCord;  
 
-    int emptCord[NUM_RAND_CORD][2] = {{x,z},{x,z}}; //... All possible empty location
+//     int emptCord[NUM_RAND_CORD][2] = {{x,z},{x,z}}; //... All possible empty location
 
-    int emptCordIndices[NUM_RAND_CORD] = {0,1}; //Amount of empty sets of coordinates
+//     int emptCordIndices[NUM_RAND_CORD] = {0,1}; //Amount of empty sets of coordinates
 
-    srand(time(0));
-    int randomNumber = rand() % 2; // random gen 0 - 1
+//     srand(time(0));
+//     int randomNumber = rand() % 2; // random gen 0 - 1
 
-    randCord = getPlayerLocation();
+//     randCord = getPlayerLocation();
 
-    randCord.x = emptCord[randomNumber][0];
-    randCord.z = emptCord[randomNumber][1];
+//     randCord.x = emptCord[randomNumber][0];
+//     randCord.z = emptCord[randomNumber][1];
 
-    mc.setPlayerPosition(randCord);
+//     mc.setPlayerPosition(randCord);
 
-    return randCord;
-}
+//     return randCord;
+// }
 
 
 

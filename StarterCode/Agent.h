@@ -29,7 +29,7 @@ public:
     Agent(mcpp::Coordinate startLoc);
     ~Agent();
     mcpp::Coordinate getPlayerLocation(void) const;
-    mcpp::Coordinate Agent::randLocation(void);
+    mcpp::Coordinate randLocation(void);
 
 
 private:
