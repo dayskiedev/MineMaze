@@ -26,7 +26,7 @@ class Agent
 {
 
 public:
-    Agent(void);
+    Agent();
     ~Agent();
     void placePlayer(mcpp::Coordinate basePoint);
     void solveMaze();
@@ -38,7 +38,5 @@ private:
     mcpp::Coordinate startLoc;
 
 };
-
-
 
 #endif //ASSIGN3_AGENT_H
