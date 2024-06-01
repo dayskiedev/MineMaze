@@ -22,23 +22,38 @@ void Agent::solveMaze() {
 
     mcpp::Coordinate startSolvePoint = mc.getPlayerPosition();
 
-    //While
+    int stepCounter = 1;
+
+    while () {
+        if (mc.getBlock() == mcpp::Blocks::AIR) {
+            mc.setPlayerPosition();
+        }
+        else if (mc.getBlock() != mcpp::Blocks::AIR && mc.getBlock() == mcpp::Blocks::AIR) {
+            mc.setPlayerPosition();
+        } 
+        else if (mc.getBlock() != mcpp::Blocks::AIR && mc.getBlock() != mcpp::Blocks::AIR && mc.getBlock() == mcpp::Blocks::AIR) {
+            mc.setPlayerPosition();
+        }
+        else if (mc.getBlock() != mcpp::Blocks::AIR && mc.getBlock() != mcpp::Blocks::AIR && mc.getBlock() != mcpp::Blocks::AIR) {
+            mc.setPlayerPosition();
+        }
+        
+        std::cout << "Step[" + stepCounter + "]: " + /*(x, y, z)*/ << std::endl;
+
+        stepCounter++;
+    }
+
 }
-    // if(state num = solveSolution) {
+   
+        //Left-Hand follow algorithm
 
-    // Left-Hand follow algorithm
-
-    //}
-
-    //Left-Hand follow algorithm
-
-//player coordinates = (x, y, z)
-// Considering player is facing forward in the x direction
-//if (z + 1 == Air)
-// go z + 1
-//else if (z + 1 != Air && x + 1 == Air)
-// go x + 1
-//else if (z + 1 != Air && x + 1 != Air && z - 1 == Air)
-// go z - 1
-//else if (z + 1 != Air && x + 1 != Air && z - 1 != Air)
-// go x -1
+    //player coordinates = (x, y, z)
+    // Considering player is facing forward in the x direction
+    //if (z + 1 == Air)
+    // go z + 1
+    //else if (z + 1 != Air && x + 1 == Air)
+    // go x + 1
+    //else if (z + 1 != Air && x + 1 != Air && z - 1 == Air)
+    // go z - 1
+    //else if (z + 1 != Air && x + 1 != Air && z - 1 != Air)
+    // go x -1
