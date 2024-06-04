@@ -1,41 +1,89 @@
 #include "Maze.h"
 #include <random>
-#include <string>
-#include <sstream>
-#include <iostream>
+//#include <string>
+//#include <sstream>
+//#include <iostream>
 
 Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
                                     unsigned int zlen,
                                     bool mode)
 {
-/*    this->basePoint=basePoint;
-    this->length=xlen; //TODO remove this var and just pass it into the coordinate vectors
-    this->width=zlen; //TODO remove this var and just pass it into the coordinate vectors
-    this->mode=mode;
-*/
+this->basePoint=basePoint;
+this->length=xlen;
+this->width=zlen;
+this->mode=mode;
 }
 
-std::vector<std::vector<char>> Maze::readMaze(const std::string& mazeStr)
+void Maze::coordPushBack(mcpp::Coordinate* coordinate)
 {
-    std::vector<std::vector<char>> mazeChars;
-    std::istringstream iSS(mazeStr);
-    std::string line;
-    while(std::getline(iSS, line)){
-        mazeChars.emplace_back();
-        for(char c : line){
-            if(c != 'n'){
-                mazeChars.back().push_back(c);
-            }
+    MazeCoord* newCoord = new MazeCoord();
+    newCoord->coord = coordinate;
+    newCoord->next = headCoord;
+    headCoord = newCoord;
+}
+
+void Maze::coordPopBack()
+{
+
+}
+
+void Maze::blockPushBack(mcpp::BlockType* block)
+{
+    MazeBlock* newBlock = new MazeBlock();
+    newBlock->block = block;
+    newBlock->next = headBlock;
+    headBlock = newBlock;
+}
+
+void Maze::blockPopBack()
+{
+
+}
+
+void Maze::flattenTerrain()
+{
+    mcpp::Coordinate* cornerFromBase = new mcpp::Coordinate((basePoint.x + length + 1), basePoint.y, (basePoint.z + width  + 1));
+    int axisIndex_z = 0;
+    for(size_t i = 0; i <  mc.getHeights(basePoint, *cornerFromBase).size(); ++i) {
+        int axisIndex_x = 0;
+        for(size_t j = 0; j < mc.getHeights(basePoint, *cornerFromBase)[i].size(); ++j) {
+                
+                if(mc.getHeights(basePoint, *cornerFromBase)[i][j] < basePoint.y) {
+                        int level_yAxis = 1;
+                        mcpp::Coordinate* getBlockCoord = new mcpp::Coordinate((basePoint.x + axisIndex_x)
+                                                        + mc.getHeights(basePoint, *cornerFromBase)[i][j],(basePoint.z + axisIndex_z));
+
+                        while(mc.getHeights(basePoint, *cornerFromBase)[i][j] < basePoint.y) { //TODO this could be an infinite loop 
+                            mcpp::Coordinate* coordinate = new mcpp::Coordinate((basePoint.x + axisIndex_x),
+                                                        (mc.getHeights(basePoint, *cornerFromBase)[i][j] + level_yAxis), (basePoint.z + axisIndex_z));
+                            this->coordPushBack(coordinate);
+                            mc.setBlock(*coordinate, mc.getBlock(*getBlockCoord));
+                            mcpp::BlockType* block = new mcpp::BlockType(mc.getBlock(*coordinate));
+                            this->blockPushBack(block);
+                            ++level_yAxis;
+                        }
+                }
+                else if(mc.getHeights(basePoint, *cornerFromBase)[i][j] > basePoint.y) { //TODO this could be an infinite loop 
+                        int level_yAxis = mc.getHeights(basePoint, *cornerFromBase)[i][j] - basePoint.y;
+                        //TODO might need to have getBlockCoord in this part as well to keep track of what blocktype was before changing to air --
+                        // still unsure if deleting memory will reverse a block at coordinate to its orgianal state
+                        while(mc.getHeights(basePoint, *cornerFromBase)[i][j] > basePoint.y) {
+                            --level_yAxis;
+                        }
+                }
+            ++axisIndex_x;
         }
+        ++axisIndex_z;
     }
-    return mazeChars;
+    delete cornerFromBase;
 }
 
-void Maze::buildMaze(std::vector<std::vector<char>>& mazeChars)
+void Maze::buildMaze(char** mazeStructure)
 {
-    std::vector<std::vector<mcpp::MinecraftConnection>> mazeBlocks;
+
 }
 
 Maze::~Maze()
 {
+
 }
