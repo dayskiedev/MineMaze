@@ -20,12 +20,10 @@ public:
      * but also could also be implemented in maze constructor?
      */
 
-    std::vector<std::vector<char>> Maze::readMaze(const std::string& mazeStr);
+    std::vector<std::vector<char>> readMaze(const std::string& mazeStr);
 
-    void Maze::buildMaze(std::vector<std::vector<char>>& mazeChars);
+    void buildMaze(std::vector<std::vector<char>>& mazeChars);
 
-    ~Maze();
-*/
 private:
 /*   mcpp::MinecraftConnection maze;
     mcpp::Coordinate basePoint;

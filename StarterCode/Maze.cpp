@@ -23,7 +23,7 @@ std::vector<std::vector<char>> Maze::readMaze(const std::string& mazeStr)
     while(std::getline(iSS, line)){
         mazeChars.emplace_back();
         for(char c : line){
-            if(c != '/n'){
+            if(c != 'n'){
                 mazeChars.back().push_back(c);
             }
         }
@@ -39,4 +39,3 @@ void Maze::buildMaze(std::vector<std::vector<char>>& mazeChars)
 Maze::~Maze()
 {
 }
-*/

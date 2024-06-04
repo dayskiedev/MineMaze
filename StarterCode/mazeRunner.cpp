@@ -23,7 +23,6 @@ int main(int argc, char *argv[]){
     mcpp::MinecraftConnection mc; 
     bool mode = NORMAL_MODE;
     if(argc > 1) { mode = compareCharStr(argv[1], "-testmode"); } 
-    //delete argv; // since we dont need the arguments anymore we can free up the memory
 
     if(!mode) { mc.postToChat("RUNNING IN NORMAL MODE"); }
     if(mode) { mc.postToChat("RUNNING IN TEST MODE"); }
@@ -31,6 +30,7 @@ int main(int argc, char *argv[]){
     mc.doCommand("time set day"); 
 
     MazeUtil mu;
+    Agent agent;
 
     std::string input;
     States curState = ST_Main;
@@ -53,12 +53,11 @@ int main(int argc, char *argv[]){
             } while (!sanatiseInput(3, stateNum));
 
             // due to the input being sanatised it should only ever be 1-3 when it reaches here
-            if(stateNum == 1) { 
-                mu.CreateStructureTerminal(); 
-                curState = ST_Main;
-            }
-            if(stateNum == 2) { std::cout << "move to function to generate random maze from height width" << std::endl; }
+            if(stateNum == 1) { mu.CreateStructureTerminal(); }
+            if(stateNum == 2) { mu.CreatureStructureRandom(mode); }
             if(stateNum == 3) { curState = ST_Main; }
+
+            curState = ST_Main;
         }
 
         if(curState == ST_BuildMaze) {
@@ -71,7 +70,10 @@ int main(int argc, char *argv[]){
                 printSolveMazeMenu();
             } while(!sanatiseInput(3, stateNum));
 
-            if(stateNum == 1) { std::cout << "Solve Manually" << std::endl; }
+            if(stateNum == 1) { 
+                std::cout << "Solve Manually" << std::endl; 
+                agent.placePlayer(mu.MazeRandStartCoord());
+            }
             if(stateNum == 2) { std::cout << "Show escape route" << std::endl; }
             if(stateNum == 3) { curState = ST_Main; }
 

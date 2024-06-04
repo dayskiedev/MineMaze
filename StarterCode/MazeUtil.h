@@ -12,14 +12,14 @@ class MazeUtil {
     public:
         ~MazeUtil(); // place to dealocate memory
         char** GetStructure();
+
+        void CreateStructure();
         void CreateStructureTerminal();
-        void CreatureStructureRandom();
+        void CreatureStructureRandom(bool mode);
 
         void PrintMazeInfo();
 
-        //testing
-        void TestFill(char c);
-        void TestPrintMaze();
+        mcpp::Coordinate MazeRandStartCoord();
 
     private:
         char** MazeStructure; // 2d array of chars
