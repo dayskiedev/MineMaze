@@ -17,30 +17,40 @@ void Agent::placePlayer(mcpp::Coordinate mazeStartPos) {
 
 }
 
+
+
 void Agent::solveMaze() {
     mcpp::MinecraftConnection mc;
 
-    mcpp::Coordinate startSolvePoint = mc.getPlayerPosition();
+    mcpp::Coordinate pointLoc = mc.getPlayerPosition();
 
     int stepCounter = 1;
 
-    while () {
-        if (mc.getBlock() == mcpp::Blocks::AIR) {
-            mc.setPlayerPosition();
+    mc.setBlock(pointLoc, mcpp::Blocks::LIME_CARPET);
+
+    while (!(mc.getBlock(pointLoc) == mcpp::Blocks::BLUE_CARPET)) {
+        if (mc.getBlock(pointLoc + MOVE_ZPLUS) == mcpp::Blocks::AIR) {
+            pointLoc = pointLoc + MOVE_ZPLUS;
+            mc.setBlock(pointLoc, mcpp::Blocks::LIME_CARPET);
         }
-        else if (mc.getBlock() != mcpp::Blocks::AIR && mc.getBlock() == mcpp::Blocks::AIR) {
-            mc.setPlayerPosition();
+        else if (!(mc.getBlock(pointLoc + MOVE_ZPLUS) == mcpp::Blocks::AIR) && mc.getBlock(pointLoc + MOVE_XPLUS) == mcpp::Blocks::AIR) {
+            pointLoc = pointLoc + MOVE_XPLUS;
+            mc.setBlock(pointLoc, mcpp::Blocks::LIME_CARPET);
         } 
-        else if (mc.getBlock() != mcpp::Blocks::AIR && mc.getBlock() != mcpp::Blocks::AIR && mc.getBlock() == mcpp::Blocks::AIR) {
-            mc.setPlayerPosition();
+        else if (!(mc.getBlock(pointLoc + MOVE_ZPLUS) == mcpp::Blocks::AIR) && !(mc.getBlock(pointLoc + MOVE_XPLUS) == mcpp::Blocks::AIR) && mc.getBlock(pointLoc + MOVE_ZMINUS) == mcpp::Blocks::AIR) {
+            pointLoc = pointLoc + MOVE_ZMINUS;
+            mc.setBlock(pointLoc, mcpp::Blocks::LIME_CARPET);
         }
-        else if (mc.getBlock() != mcpp::Blocks::AIR && mc.getBlock() != mcpp::Blocks::AIR && mc.getBlock() != mcpp::Blocks::AIR) {
-            mc.setPlayerPosition();
+        else if (!(mc.getBlock(pointLoc + MOVE_ZPLUS) == mcpp::Blocks::AIR) && !(mc.getBlock(pointLoc + MOVE_XPLUS) == mcpp::Blocks::AIR) && !(mc.getBlock(pointLoc + MOVE_ZMINUS) == mcpp::Blocks::AIR)) {
+            pointLoc = pointLoc + MOVE_XMINUS;
+            mc.setBlock(pointLoc, mcpp::Blocks::LIME_CARPET);
         }
         
-        std::cout << "Step[" + stepCounter + "]: " + /*(x, y, z)*/ << std::endl;
+        std::cout << "Step[" << stepCounter << "]: (" << pointLoc.x << ", " << pointLoc.y << ", " << pointLoc.z << ")"  << std::endl;
 
         stepCounter++;
+
+        mc.setBlock(pointLoc, mcpp::Blocks::AIR);
     }
 
 }
