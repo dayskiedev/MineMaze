@@ -50,7 +50,9 @@ void Agent::solveMaze() {
 
         stepCounter++;
 
-        mc.setBlock(pointLoc, mcpp::Blocks::AIR);
+        // mc.setBlock(pointLoc, mcpp::Blocks::AIR);
+        // Need to figure how to do the second delay 
+    
     }
 
 }
