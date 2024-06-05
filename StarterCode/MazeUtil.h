@@ -19,6 +19,8 @@ class MazeUtil {
 
         void PrintMazeInfo();
 
+        void RecursiveFill(int mh, int mw, bool sh, bool sv);
+
         mcpp::Coordinate MazeRandStartCoord();
 
     private:
