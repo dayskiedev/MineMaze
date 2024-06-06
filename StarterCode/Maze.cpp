@@ -50,7 +50,7 @@ int Maze::mazeSize() const
 //  still unsure if deleting memory will reverse a block at coordinate to its orgianal state
 void Maze::flattenTerrain()
 {
-    mcpp::Coordinate *cornerFromBase = new mcpp::Coordinate((basePoint.x + length + 1), basePoint.y, (basePoint.z + width + 1));
+    mcpp::Coordinate *cornerFromBase = new mcpp::Coordinate((basePoint.x + length + 2), basePoint.y, (basePoint.z + width + 2));
     int axisIndex_z = 0;
     for (size_t i = 0; i < mc.getHeights(basePoint, *cornerFromBase).size(); ++i)
     {
@@ -69,11 +69,11 @@ void Maze::flattenTerrain()
                     mcpp::Coordinate *coordinate = new mcpp::Coordinate((basePoint.x + axisIndex_x),
                                                                         (mc.getHeights(basePoint, *cornerFromBase)[i][j] + level_yAxis), (basePoint.z + axisIndex_z));
                     this->coordPushBack(coordinate);
-                    mc.setBlock(*coordinate, mc.getBlock(*getBlockCoord));
-                    mcpp::BlockType *block = new mcpp::BlockType(mc.getBlock(*coordinate));
+                    mcpp::BlockType *block = new mcpp::BlockType(mc.getBlock(*getBlockCoord));
                     this->blockPushBack(block);
-                    delete coordinate;
-                    delete block;
+                    mc.setBlock(*coordinate, *block);
+                    //delete coordinate; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
+                    //delete block; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
                     ++level_yAxis;
                 }
                 delete getBlockCoord;
@@ -86,11 +86,11 @@ void Maze::flattenTerrain()
                     mcpp::Coordinate *coordinate = new mcpp::Coordinate((basePoint.x + axisIndex_x),
                                                                         (mc.getHeights(basePoint, *cornerFromBase)[i][j] + yAxis_diff), (basePoint.z + axisIndex_z));
                     this->coordPushBack(coordinate);
-                    mc.setBlock(*coordinate, mcpp::Blocks::AIR);
                     mcpp::BlockType *block = new mcpp::BlockType(mcpp::Blocks::AIR);
                     this->blockPushBack(block);
-                    delete coordinate;
-                    delete block;
+                    mc.setBlock(*coordinate, *block);
+                    //delete coordinate; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
+                    //delete block; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
                     --yAxis_diff;
                 }
             }
@@ -103,6 +103,36 @@ void Maze::flattenTerrain()
 
 void Maze::buildMaze(char **mazeStructure)
 {
+    for(int row = 0; row < length; ++row)
+    {
+        for(int col = 0; col < width; ++col)
+        {
+            if(mazeStructure[row][col] == 'X') {
+                for(int i = 1; i < 4; ++i)
+                {
+                mcpp::Coordinate *cooridnate = new mcpp::Coordinate((basePoint.x + row + 1), (basePoint.y + i), (basePoint.z + col + 1));
+                this->coordPushBack(cooridnate);
+                mcpp::BlockType *block = new mcpp::BlockType(mcpp::Blocks::ACACIA_WOOD_PLANK);
+                this->blockPushBack(block);
+                mc.setBlock(*cooridnate, *block);
+                //delete cooridnate; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
+                //delete block; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
+                }
+            }
+            else if((mazeStructure[row][col] == '.' && row == 0 || row == length - 1) ||
+                (mazeStructure[row][col] == '.' && col == 0 || col == width - 1))
+                {
+                mcpp::Coordinate *cooridnate = new mcpp::Coordinate((basePoint.x + row + 1), (basePoint.y + 1), (basePoint.z + col + 1));
+                this->coordPushBack(cooridnate);
+                mcpp::BlockType *block = new mcpp::BlockType(mcpp::Blocks::BLUE_CARPET);
+                this->blockPushBack(block);
+                mc.setBlock(*cooridnate, *block);
+                //delete cooridnate; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
+                //delete block; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
+                }
+        }
+
+    }
 }
 
 Maze::~Maze()

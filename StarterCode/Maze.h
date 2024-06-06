@@ -39,8 +39,8 @@ private:
     mcpp::Coordinate basePoint;
     MazeCoord *headCoord;
     MazeBlock *headBlock;
-    unsigned int length;
-    unsigned int width;
+    int length;
+    int width;
     bool mode;
 
     void coordPushBack(mcpp::Coordinate *coord);
