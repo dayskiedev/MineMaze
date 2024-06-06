@@ -88,6 +88,7 @@ void Maze::flattenTerrain()
                     this->coordPushBack(coordinate);
                     mc.setBlock(*coordinate, mcpp::Blocks::AIR);
                     mcpp::BlockType *block = new mcpp::BlockType(mcpp::Blocks::AIR);
+                    this->blockPushBack(block);
                     delete coordinate;
                     delete block;
                     --yAxis_diff;
