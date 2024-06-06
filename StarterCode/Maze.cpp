@@ -13,6 +13,7 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
     this->mode = mode;
 
     flattenTerrain();
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
     buildMaze(mazeStructure);
 }
 
@@ -95,7 +96,7 @@ void Maze::flattenTerrain()
             ++axisIndex_x;
         }
         ++axisIndex_z;
-    }
+    } 
     delete cornerFromBase;
 }
 
