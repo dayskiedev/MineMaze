@@ -1,8 +1,7 @@
 #include "Maze.h"
-#include <random>
-// #include <string>
-// #include <sstream>
-// #include <iostream>
+#include <mcpp/mcpp.h>
+#include <chrono>
+#include <thread>
 
 Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
            unsigned int zlen,
@@ -57,13 +56,11 @@ void Maze::flattenTerrain()
         int axisIndex_x = 0;
         for (size_t j = 0; j < mc.getHeights(basePoint, *cornerFromBase)[i].size(); ++j)
         {
-
             if (mc.getHeights(basePoint, *cornerFromBase)[i][j] < basePoint.y)
             {
                 int yAxis_diff = basePoint.y - mc.getHeights(basePoint, *cornerFromBase)[i][j];
                 int level_yAxis = 1;
                 mcpp::Coordinate *getBlockCoord = new mcpp::Coordinate((basePoint.x + axisIndex_x) + mc.getHeights(basePoint, *cornerFromBase)[i][j], (basePoint.z + axisIndex_z));
-
                 while (level_yAxis != yAxis_diff)
                 {
                     mcpp::Coordinate *coordinate = new mcpp::Coordinate((basePoint.x + axisIndex_x),
@@ -71,6 +68,7 @@ void Maze::flattenTerrain()
                     this->coordPushBack(coordinate);
                     mcpp::BlockType *block = new mcpp::BlockType(mc.getBlock(*getBlockCoord));
                     this->blockPushBack(block);
+                    std::this_thread::sleep_for(std::chrono::milliseconds(50));
                     mc.setBlock(*coordinate, *block);
                     //delete coordinate; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
                     //delete block; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
@@ -88,6 +86,7 @@ void Maze::flattenTerrain()
                     this->coordPushBack(coordinate);
                     mcpp::BlockType *block = new mcpp::BlockType(mcpp::Blocks::AIR);
                     this->blockPushBack(block);
+                    std::this_thread::sleep_for(std::chrono::milliseconds(50));
                     mc.setBlock(*coordinate, *block);
                     //delete coordinate; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
                     //delete block; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
@@ -114,22 +113,34 @@ void Maze::buildMaze(char **mazeStructure)
                 this->coordPushBack(cooridnate);
                 mcpp::BlockType *block = new mcpp::BlockType(mcpp::Blocks::ACACIA_WOOD_PLANK);
                 this->blockPushBack(block);
+                std::this_thread::sleep_for(std::chrono::milliseconds(50));
                 mc.setBlock(*cooridnate, *block);
                 //delete cooridnate; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
                 //delete block; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
                 }
             }
-            else if((mazeStructure[row][col] == '.' && row == 0 || row == length - 1) ||
-                (mazeStructure[row][col] == '.' && col == 0 || col == width - 1))
+            else if(mazeStructure[row][col] == '.' && row == 0 || row == length - 1)
                 {
-                mcpp::Coordinate *cooridnate = new mcpp::Coordinate((basePoint.x + row + 1), (basePoint.y + 1), (basePoint.z + col + 1));
+                mcpp::Coordinate *cooridnate = new mcpp::Coordinate(basePoint.x, (basePoint.y + 1), (basePoint.z + col + 1));
                 this->coordPushBack(cooridnate);
                 mcpp::BlockType *block = new mcpp::BlockType(mcpp::Blocks::BLUE_CARPET);
                 this->blockPushBack(block);
+                std::this_thread::sleep_for(std::chrono::milliseconds(50));
                 mc.setBlock(*cooridnate, *block);
                 //delete cooridnate; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
                 //delete block; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
                 }
+            else if(mazeStructure[row][col] == '.' && col == 0 || col == width - 1)
+            {
+                mcpp::Coordinate *cooridnate = new mcpp::Coordinate((basePoint.x + row + 1),(basePoint.y + 1), basePoint.z);
+                this->coordPushBack(cooridnate);
+                mcpp::BlockType *block = new mcpp::BlockType(mcpp::Blocks::BLUE_CARPET);
+                this->blockPushBack(block);
+                std::this_thread::sleep_for(std::chrono::milliseconds(50));
+                mc.setBlock(*cooridnate, *block);
+                //delete cooridnate; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
+                //delete block; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
+            }
         }
 
     }

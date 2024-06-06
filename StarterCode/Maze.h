@@ -2,9 +2,8 @@
 #define ASSIGN_MAZE_H
 
 #include <mcpp/mcpp.h>
-// #include <string>
-// #include <sstream>
-// #include <iostream>
+#include <chrono>
+#include <thread>
 
 class MazeCoord
 {
