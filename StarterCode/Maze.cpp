@@ -12,6 +12,10 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
     this->length = xlen;
     this->width = zlen;
     this->mode = mode;
+
+    // sleep function 50ms delay
+    // flattenTerrain();
+    // buildMaze();
 }
 
 void Maze::coordPushBack(mcpp::Coordinate *coordinate)
@@ -68,8 +72,11 @@ void Maze::flattenTerrain()
                     mc.setBlock(*coordinate, mc.getBlock(*getBlockCoord));
                     mcpp::BlockType *block = new mcpp::BlockType(mc.getBlock(*coordinate));
                     this->blockPushBack(block);
+                    delete coordinate;
+                    delete block;
                     ++level_yAxis;
                 }
+                delete getBlockCoord;
             }
             else if (mc.getHeights(basePoint, *cornerFromBase)[i][j] > basePoint.y)
             {
@@ -81,6 +88,8 @@ void Maze::flattenTerrain()
                     this->coordPushBack(coordinate);
                     mc.setBlock(*coordinate, mcpp::Blocks::AIR);
                     mcpp::BlockType *block = new mcpp::BlockType(mcpp::Blocks::AIR);
+                    delete coordinate;
+                    delete block;
                     --yAxis_diff;
                 }
             }
