@@ -4,17 +4,16 @@
 #include <thread>
 
 Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
-           unsigned int zlen,
-           bool mode)
+            unsigned int zlen, char **mazeStructure,
+            bool mode)
 {
     this->basePoint = basePoint;
     this->length = xlen;
     this->width = zlen;
     this->mode = mode;
 
-    // sleep function 50ms delay
-    // flattenTerrain();
-    // buildMaze();
+    flattenTerrain();
+    buildMaze(mazeStructure);
 }
 
 void Maze::coordPushBack(mcpp::Coordinate *coordinate)

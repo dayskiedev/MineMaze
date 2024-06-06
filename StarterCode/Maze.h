@@ -25,8 +25,8 @@ class Maze
 {
 public:
     Maze(mcpp::Coordinate basePoint, unsigned int xlen,
-         unsigned int zlen,
-         bool mode);
+            unsigned int zlen, char **mazeStructure,
+            bool mode);
     void flattenTerrain();
 
     void buildMaze(char **mazeStructure);
