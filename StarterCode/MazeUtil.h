@@ -19,9 +19,12 @@ class MazeUtil {
 
         void PrintMazeInfo();
 
-        void RecursiveFill(int mh, int mw, bool sh, bool sv);
+        void RecursiveFill(int minh, int minw, int maxh, int maxw);
 
         mcpp::Coordinate MazeRandStartCoord();
+        int getLength() { return length; }
+        int getWidth() { return width; }
+        mcpp::Coordinate getBasePoint() { return basePoint; }
 
     private:
         char** MazeStructure; // 2d array of chars

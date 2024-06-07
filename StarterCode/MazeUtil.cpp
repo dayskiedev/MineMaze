@@ -4,6 +4,7 @@
 
 char** MazeUtil::GetStructure() { return MazeStructure; } 
 
+
 void MazeUtil::CreateStructure() {
     // get basepoint for maze
     mcpp::MinecraftConnection mc;
@@ -16,10 +17,10 @@ void MazeUtil::CreateStructure() {
         std::cin >> input;
     }
 
-    basePoint = mcpp::Coordinate(0,0,0);
+    basePoint = mcpp::Coordinate(mc.getPlayerPosition());
     
-    std::cout << "Enter the length and width of the maze:" << std::endl;
-    std::cin >> length; //TODO ADD SAFTEY CHECKS CHECK IF INPUT IS NOT A NUMBER *OR* IF IT IS AN EVEN NUMBER, WE CANT HAVE THAT!
+    std::cout << "Enter the length and width of the maze:" << std::endl; 
+    std::cin >> length;
     std::cin >> width;
 
     MazeStructure = new char*[length];
@@ -31,7 +32,7 @@ void MazeUtil::CreateStructure() {
 void MazeUtil::CreateStructureTerminal() {
     CreateStructure();
 
-    std::cout << "Enter the maze structure:" << std::endl;
+    std::cout << "Enter the maze structure (" << length << "x" << width << "): " << std::endl;
     // read in input from terminal
     char c;
     for(int i = 0; i < length; ++i) {
@@ -47,6 +48,7 @@ void MazeUtil::CreateStructureTerminal() {
 
 void MazeUtil::CreatureStructureRandom(bool mode) {
     CreateStructure();
+    // week 2 class 1
     char w = 'x';
     char a = '.';
     // generate an empty maze
@@ -73,82 +75,47 @@ void MazeUtil::CreatureStructureRandom(bool mode) {
     // pick random odd number between 1 and width (niether of these tho)
     // place wall pick even number and place opening
 
-    RecursiveFill(0,0, false, false);
+    RecursiveFill(0,0, length - 1, width - 1);
+
+    //PrintMazeInfo();
 
     PrintMazeInfo();
 }
 
-void MazeUtil::RecursiveFill(int mh, int mw, bool sh, bool sv) {
-    // what is true when the function is called?
-    // the inside of the maze has not been filled
-
-    // what is true when the function returns
-    // when there are no more possible spots for it to place walls
-
-    // CURRENT ISSUES
-    // - DOESNT KNOW IF HORIZONTAL / VERTICAL SLAB HAS ALREADY BEEN PLACED
-    // - DOESNT CUT OUT A GAP TO GET IN
-
-
-    // for a 7x7 grid
-    // 0123456
-    // xxxxxxx 0
-    // x     x 1
-    // x     x 2
-    // x     x 3
-    // x     x 4
-    // x     x 5
+void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw) {
+    // shrink array each iteration
+    // generateMaze(1,2,3,4)
+    //  generateMaze(UPPPER)
+    //  generateMaze(lower)
     // xxxxxxx 6
     // walls can only go on even spaces 
     //passages must be on odd spaces
+    std::cout << "Inside recursion " << std::endl;
+    if(maxh - 2 == minh) { return; }
+    // exit condition
 
     // rand() % 2; // 0 = horizontal 1 = vertical
-    int direction = rand() % 2;
+    //int direction = 0;
+
+    int heightIndex;
+
+    // 0 -> 5(1,2,3,4) +1 becomes 1 -> 6 (2,3,4,5)
+    do { heightIndex = rand() % (maxh- 1) + minh + 1; }
+    while((int)heightIndex % 2 != 0);
+    // // pick even number between min and max height of 
+    // std::cout << "SELECTED ROW " << heightIndex << std::endl;
+    for(int i = minw; i < maxw; ++i) { MazeStructure[heightIndex][i] = 'x'; }
     //int minHeight = mh;
-    int minWidth = mw;  
-    int minHeight = mh;
-
-    bool stopHorizontal = sh;
-    bool stopVertical = sv;
-
-    if(stopHorizontal && stopVertical) { return;}
-
-    if(direction == 0 && !stopHorizontal) {
-
-        int heightIndex;
-        do{ heightIndex = rand() % (length - 4 - minHeight) + minHeight + 2; }
-        while (heightIndex % 2 != 0);
-
-       //std::cout << "HEIGHT PICKED: " << heightIndex << std::endl;
-        // then create horizontal wall
-        for(int i = minWidth; i < width; ++i) { MazeStructure[heightIndex][i] = 'x'; }
-
-        // check if current position minus 2 is equal to the minimum heihgt 
-        std::cout << "cur ht index: " << heightIndex << " cur minheight " << minHeight << std::endl;
-        if(heightIndex - 2 == minHeight) { 
-            if(heightIndex + 2 != length - 1) { minHeight = heightIndex; } // if this condition runs it means we still have room to fill!
-            else {
-                std::cout << "it should stop here"  << std::endl;
-                stopHorizontal = true;
-            }
-        }
-    }
-
-    if(direction == 1 && !stopVertical) {
-        int widthIndex;
-        do { widthIndex = rand() % (width - 4 - minWidth) + minWidth + 2; }
-        while(widthIndex % 2 != 0);
-
-        for(int i = minHeight; i < length; ++i) { MazeStructure[i][widthIndex] = 'x'; }
-
-        if(widthIndex - 2 == minWidth) {
-            if(widthIndex + 2 != width - 1) { minWidth = widthIndex; }
-            else { stopVertical = true; } 
-        }
-    }
-
+    //PrintMazeInfo();
     // do checks to see if we can call function again then call it again
-    RecursiveFill(minHeight, minWidth, stopHorizontal, stopVertical);
+    // supposd to call it twice
+    // newrecursive(m)
+
+    // upper function once this breaks call lower function
+    // lower function 
+    ///std::cout << "SELECTED ROW " << heightIndex << std::endl;
+    RecursiveFill(minh, 0, heightIndex, 0); // lower maze
+    RecursiveFill(heightIndex, 0, maxh, 0); // upper maze
 }
 
 void MazeUtil::PrintMazeInfo() {

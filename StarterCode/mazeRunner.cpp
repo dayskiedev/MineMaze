@@ -31,7 +31,7 @@ int main(int argc, char *argv[]){
 
     MazeUtil mu;
     Agent agent;
-
+    
     std::string input;
     States curState = ST_Main;
     printStartText();
