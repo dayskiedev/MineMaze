@@ -109,6 +109,7 @@ int main(int argc, char *argv[])
             if (stateNum == 2)
             {
                 std::cout << "Show escape route" << std::endl;
+                agent.solveMaze();
             }
             if (stateNum == 3)
             {
