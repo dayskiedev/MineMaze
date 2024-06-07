@@ -2,8 +2,8 @@
 #define ASSIGN3_AGENT_H
 
 #include <iostream>
-#include <cstdlib> //Is this permitted?
 #include <mcpp/mcpp.h>
+#include <unistd.h>   
 
 #define MOVE_XPLUS mcpp::Coordinate(1,0,0)
 #define MOVE_XMINUS mcpp::Coordinate(-1,0,0)
@@ -35,6 +35,7 @@ public:
 private:
     /* data */
     mcpp::MinecraftConnection mc;
+    mcpp::Coordinate pointLoc;
     mcpp::Coordinate startLoc;
 
 };
