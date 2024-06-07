@@ -83,39 +83,46 @@ void MazeUtil::CreatureStructureRandom(bool mode) {
 }
 
 void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw) {
-    // shrink array each iteration
-    // generateMaze(1,2,3,4)
-    //  generateMaze(UPPPER)
-    //  generateMaze(lower)
-    // xxxxxxx 6
-    // walls can only go on even spaces 
-    //passages must be on odd spaces
-    std::cout << "Inside recursion " << std::endl;
-    if(maxh - 2 == minh) { return; }
-    // exit condition
+    int direction = rand() % 2;
+    if(maxw - 2 <= minw) { return; }
+    if(maxh - 2 <= minh) { return; }
+    std::cout << "DIRECTION " << direction << std::endl;
 
-    // rand() % 2; // 0 = horizontal 1 = vertical
-    //int direction = 0;
+    int heightIndex = maxh;
+    int widthIndex = maxw;
 
-    int heightIndex;
+    int hole = 0;
 
     // 0 -> 5(1,2,3,4) +1 becomes 1 -> 6 (2,3,4,5)
-    do { heightIndex = rand() % (maxh- 1) + minh + 1; }
-    while((int)heightIndex % 2 != 0);
-    // // pick even number between min and max height of 
-    // std::cout << "SELECTED ROW " << heightIndex << std::endl;
-    for(int i = minw; i < maxw; ++i) { MazeStructure[heightIndex][i] = 'x'; }
-    //int minHeight = mh;
-    //PrintMazeInfo();
-    // do checks to see if we can call function again then call it again
-    // supposd to call it twice
-    // newrecursive(m)
 
-    // upper function once this breaks call lower function
-    // lower function 
-    ///std::cout << "SELECTED ROW " << heightIndex << std::endl;
-    RecursiveFill(minh, 0, heightIndex, 0); // lower maze
-    RecursiveFill(heightIndex, 0, maxh, 0); // upper maze
+    // 0 -> 3 {1,2} +1 -> 1 -> 4 {2,3}
+    if(direction == 0) {
+        do { heightIndex = rand() % (maxh- 1) + minh + 1; }
+        while((int)heightIndex % 2 != 0 || heightIndex == maxh || heightIndex == minh);
+        for(int i = 0; i < 6; ++i) { MazeStructure[heightIndex][i] = 'x'; }
+
+        do{hole = rand() % (maxh- 1) + minh + 1; }
+        while(hole % 2 == 0);
+        MazeStructure[heightIndex][hole] = '.';
+        RecursiveFill(minh, minw, heightIndex, maxw); // lower maze
+        RecursiveFill(heightIndex, minw, maxh, maxw); // upper maze
+    }
+    if(direction == 1){
+        // 0 - > 
+        do { widthIndex = rand() % (maxw- 1) + minw + 1; }
+        while((int)widthIndex % 2 != 0 || widthIndex == maxw || widthIndex == minw);
+        for(int i = 0; i < 6; ++i) { MazeStructure[i][widthIndex] = 'x'; }
+
+        do{hole = rand() % (maxw- 1) + minw + 1; }
+        while (hole % 2 == 0);
+        MazeStructure[hole][widthIndex] = '.';
+        RecursiveFill(minh, minw, maxh, widthIndex); // lower maze
+        RecursiveFill(minh, widthIndex, maxh, maxw); // upper maze
+    }
+    //PrintMazeInfo();
+    // split call 
+
+
 }
 
 void MazeUtil::PrintMazeInfo() {
