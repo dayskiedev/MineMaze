@@ -24,12 +24,14 @@ public:
 class Maze
 {
 public:
-    Maze(mcpp::Coordinate basePoint, unsigned int xlen,
-            unsigned int zlen, char **mazeStructure,
-            bool mode);
+    Maze();
+
+    Maze(mcpp::Coordinate basePoint, int xlen,
+         int zlen, char **mazeStructure,
+         bool mode);
     void flattenTerrain();
 
-    void buildMaze(char **mazeStructure);
+    void buildMaze();
 
     ~Maze();
 
@@ -41,6 +43,7 @@ private:
     int length;
     int width;
     bool mode;
+    char **mazeStructure;
 
     void coordPushBack(mcpp::Coordinate *coord);
     void coordPopBack();

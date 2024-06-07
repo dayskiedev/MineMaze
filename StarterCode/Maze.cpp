@@ -3,18 +3,21 @@
 #include <chrono>
 #include <thread>
 
-Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
-           unsigned int zlen, char **mazeStructure,
+Maze::Maze() {}
+
+Maze::Maze(mcpp::Coordinate basePoint, int xlen,
+           int zlen, char **mazeStructure,
            bool mode)
 {
     this->basePoint = basePoint;
     this->length = xlen;
     this->width = zlen;
     this->mode = mode;
+    this->mazeStructure = mazeStructure;
 
-    flattenTerrain();
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    buildMaze(mazeStructure);
+    // flattenTerrain();
+    // std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    // buildMaze(mazeStructure);
 }
 
 void Maze::coordPushBack(mcpp::Coordinate *coordinate)
@@ -50,6 +53,7 @@ int Maze::mazeSize() const
 //  still unsure if deleting memory will reverse a block at coordinate to its orgianal state
 void Maze::flattenTerrain()
 {
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
     mcpp::Coordinate *cornerFromBase = new mcpp::Coordinate((basePoint.x + length + 2), basePoint.y, (basePoint.z + width + 2));
     int axisIndex_z = 0;
     for (size_t i = 0; i < mc.getHeights(basePoint, *cornerFromBase).size(); ++i)
@@ -101,13 +105,14 @@ void Maze::flattenTerrain()
     delete cornerFromBase;
 }
 
-void Maze::buildMaze(char **mazeStructure)
+void Maze::buildMaze()
 {
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
     for (int row = 0; row < length; ++row)
     {
         for (int col = 0; col < width; ++col)
         {
-            if (mazeStructure[row][col] == 'X')
+            if (this->mazeStructure[row][col] == 'X')
             {
                 for (int i = 1; i < 4; ++i)
                 {
@@ -121,7 +126,7 @@ void Maze::buildMaze(char **mazeStructure)
                     // delete block; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
                 }
             }
-            else if ((mazeStructure[row][col] == '.') && (row == 0 || row == length - 1))
+            else if ((this->mazeStructure[row][col] == '.') && (row == 0 || row == length - 1))
             {
                 mcpp::Coordinate *cooridnate = new mcpp::Coordinate(basePoint.x, (basePoint.y + 1), (basePoint.z + col + 1));
                 this->coordPushBack(cooridnate);
@@ -132,7 +137,7 @@ void Maze::buildMaze(char **mazeStructure)
                 // delete cooridnate; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
                 // delete block; TODO not sure if this will tamper with the function being able to recall where and what blocks were placed in minecraft
             }
-            else if ((mazeStructure[row][col] == '.') && (col == 0 || col == width - 1))
+            else if ((this->mazeStructure[row][col] == '.') && (col == 0 || col == width - 1))
             {
                 mcpp::Coordinate *cooridnate = new mcpp::Coordinate((basePoint.x + row + 1), (basePoint.y + 1), basePoint.z);
                 this->coordPushBack(cooridnate);
