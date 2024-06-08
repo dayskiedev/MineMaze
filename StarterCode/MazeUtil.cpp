@@ -1,9 +1,24 @@
 #include "MazeUtil.h"
 #include <mcpp/mcpp.h>
 #include <stdlib.h>
+#include <random>
 
 char** MazeUtil::GetStructure() { return MazeStructure; } 
 
+mcpp::Coordinate MazeUtil::MazeRandStartCoord() {
+    mcpp::MinecraftConnection mc;
+    int x;
+    int y = mc.getPlayerPosition().y;
+    int z;
+
+    do{
+        x = rand() % width;
+        z = rand() % length;
+    }
+    while (MazeStructure[y][z] != '.');
+    
+    return mcpp::Coordinate(x,y,z);
+}
 
 void MazeUtil::CreateStructure() {
     // get basepoint for maze
@@ -17,10 +32,10 @@ void MazeUtil::CreateStructure() {
         std::cin >> input;
     }
 
-    basePoint = mcpp::Coordinate(mc.getPlayerPosition());
+    basePoint = mc.getPlayerPosition();
     
     std::cout << "Enter the length and width of the maze:" << std::endl; 
-    std::cin >> length;
+    std::cin >> length;// no input validation
     std::cin >> width;
 
     MazeStructure = new char*[length];
@@ -46,13 +61,17 @@ void MazeUtil::CreateStructureTerminal() {
     PrintMazeInfo();
 }
 
+// void CreateMazeEntrance() {
+//     int dir = rand() % 4 // 0 = up 1 = left 2 = right 3 = down
+// }
+
 void MazeUtil::CreatureStructureRandom(bool mode) {
     CreateStructure();
-    // week 2 class 1
+
     char w = 'x';
-    char a = '.';
-    // generate an empty maze
-    // the top and bottom xxx
+    char a = '.';   
+
+
     for(int i = 0; i < width; ++i) { 
         MazeStructure[0][i] = w;
         MazeStructure[length-1][i] = w;
@@ -64,65 +83,56 @@ void MazeUtil::CreatureStructureRandom(bool mode) {
             MazeStructure[i][j] = a;
         }
     }
-    // could combine them into a single oop
-
-        // some kind of linked list to deal with the recursive
-    // odd for walls
-    // even for open
-
-    // start with open maze
-    // pick horizontal 0 or vertical 1
-    // pick random odd number between 1 and width (niether of these tho)
-    // place wall pick even number and place opening
-
-    RecursiveFill(0,0, length - 1, width - 1);
-
-    //PrintMazeInfo();
+    RecursiveFill(0,0, length-1, width - 1);
+    // place entrance
 
     PrintMazeInfo();
 }
 
 void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw) {
-    int direction = rand() % 2;
-    if(maxw - 2 <= minw) { return; }
+    // works when len and wid are same but not when different?
+    std::random_device rnd;
+
+    std::uniform_int_distribution<int> dir(0,1);
+    std::uniform_int_distribution<int> rndWidth(minw + 1, maxw - 1);
+    std::uniform_int_distribution<int> rndHeight(minh + 1, maxh -1);
+
+    int direction = dir(rnd); // where 0 = horizontal
+    int wall = 0;
+
     if(maxh - 2 <= minh) { return; }
-    std::cout << "DIRECTION " << direction << std::endl;
+    if(maxw - 2 <= minw) { return; }
 
-    int heightIndex = maxh;
-    int widthIndex = maxw;
-
-    int hole = 0;
-
-    // 0 -> 5(1,2,3,4) +1 becomes 1 -> 6 (2,3,4,5)
-
-    // 0 -> 3 {1,2} +1 -> 1 -> 4 {2,3}
     if(direction == 0) {
-        do { heightIndex = rand() % (maxh- 1) + minh + 1; }
-        while((int)heightIndex % 2 != 0 || heightIndex == maxh || heightIndex == minh);
-        for(int i = 0; i < 6; ++i) { MazeStructure[heightIndex][i] = 'x'; }
+        int horizontalSplit = 0;
+        do{ horizontalSplit = rndHeight(rnd); }
+        while(horizontalSplit % 2); // repeat until even number
+        for(int i = minw; i < maxw; ++i) { MazeStructure[horizontalSplit][i] = 'x'; }
 
-        do{hole = rand() % (maxh- 1) + minh + 1; }
-        while(hole % 2 == 0);
-        MazeStructure[heightIndex][hole] = '.';
-        RecursiveFill(minh, minw, heightIndex, maxw); // lower maze
-        RecursiveFill(heightIndex, minw, maxh, maxw); // upper maze
+        //generate hole
+        do{ wall = rndWidth(rnd); }
+        while ( wall % 2 == 0);
+        MazeStructure[horizontalSplit][wall] = '.';
+
+        // now we treat the horizontal split as the max for the top square and the min for the bottom square
+        RecursiveFill(minh, minw, horizontalSplit, maxw);
+        RecursiveFill(horizontalSplit, minw, maxh, maxw);
     }
-    if(direction == 1){
-        // 0 - > 
-        do { widthIndex = rand() % (maxw- 1) + minw + 1; }
-        while((int)widthIndex % 2 != 0 || widthIndex == maxw || widthIndex == minw);
-        for(int i = 0; i < 6; ++i) { MazeStructure[i][widthIndex] = 'x'; }
+    if(direction == 1) {
+        int verticalSplit = 0;
+        do { verticalSplit = rndWidth(rnd); }
+        while(verticalSplit % 2 != 0);
+        // genertaing vertical line
+        for(int i = minh; i < maxh; ++i) { MazeStructure[i][verticalSplit] = 'x'; }
 
-        do{hole = rand() % (maxw- 1) + minw + 1; }
-        while (hole % 2 == 0);
-        MazeStructure[hole][widthIndex] = '.';
-        RecursiveFill(minh, minw, maxh, widthIndex); // lower maze
-        RecursiveFill(minh, widthIndex, maxh, maxw); // upper maze
+        // generating hole
+        do{ wall = rndHeight(rnd); }
+        while (wall % 2 == 0);
+        MazeStructure[wall][verticalSplit] = '.'; 
+
+        RecursiveFill(minh, minw, maxh, verticalSplit);
+        RecursiveFill(minh, verticalSplit, maxh, maxw);
     }
-    //PrintMazeInfo();
-    // split call 
-
-
 }
 
 void MazeUtil::PrintMazeInfo() {
@@ -131,23 +141,18 @@ void MazeUtil::PrintMazeInfo() {
     std::cout << "Structure:" << std::endl;
     for(int i = 0; i < length; ++i) {
         for(int j = 0; j < width; ++j) {
-            std::cout << MazeStructure[i][j];
+            std::cout << MazeStructure[i][j] << " ";
         }
         std::cout << std::endl;
     }
     std::cout << "**End Printing Maze**" << std::endl;
 }
 
-mcpp::Coordinate MazeUtil::MazeRandStartCoord() {
-    mcpp::MinecraftConnection mc;
-    if(length == 0) { 
-        mc.postToChat("No Maze Detected Unable To Teleport Player...");
-        return mc.getPlayerPosition();
-    }
-
-    return mc.getPlayerPosition();
-}
-
 
 MazeUtil::~MazeUtil() {
+    for(int i = 0; i < length; ++i) {
+        delete[] MazeStructure[i]; // delete inner arrays
+    }
+
+    delete[] MazeStructure;
 }
