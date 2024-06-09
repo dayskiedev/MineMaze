@@ -15,7 +15,7 @@ mcpp::Coordinate MazeUtil::MazeRandStartCoord() {
         x = rand() % width;
         z = rand() % length;
     }
-    while (MazeStructure[y][z] != '.');
+    while (MazeStructure[x][z] != '.');
     
     return mcpp::Coordinate(x,y,z);
 }
@@ -39,7 +39,7 @@ void MazeUtil::CreateStructure() {
     std::cin >> width;
 
     MazeStructure = new char*[length];
-    for(int i = 0; i < width; i++) {
+    for(int i = 0; i < length; i++) {
         MazeStructure[i] = new char[width];
     }
 }
@@ -61,31 +61,50 @@ void MazeUtil::CreateStructureTerminal() {
     PrintMazeInfo();
 }
 
-// void CreateMazeEntrance() {
-//     int dir = rand() % 4 // 0 = up 1 = left 2 = right 3 = down
-// }
+void MazeUtil::CreateMazeEntrance() {
+    int dir = rand() % 4; // 0 = up 1 = left 2 = right 3 = down
+    int pos;
+    if(dir == 0) {
+        do{pos = rand() % width; }
+        while (MazeStructure[1][pos] == 'x');
+        MazeStructure[0][pos] = '.';
+    }
+    if(dir == 1) {
+        do{pos = rand() % length; }
+        while (MazeStructure[pos][1] == 'x');
+        MazeStructure[pos][0] = '.';
+    }
+    if(dir == 2) {
+        do{pos = rand() % length; }
+        while(MazeStructure[pos][width - 2] == 'x');
+        MazeStructure[pos][width - 1] = '.';
+    }
+    if(dir == 3) {
+        do{pos = rand() % width; }
+        while(MazeStructure[length - 2][pos] == 'x');
+        MazeStructure[length - 1][pos] = '.';
+    } 
+}
 
 void MazeUtil::CreatureStructureRandom(bool mode) {
     CreateStructure();
 
-    char w = 'x';
-    char a = '.';   
 
-
+    // creates the x outline for maze and fills with .'s
     for(int i = 0; i < width; ++i) { 
-        MazeStructure[0][i] = w;
-        MazeStructure[length-1][i] = w;
+        MazeStructure[0][i] = 'x';
+        MazeStructure[length-1][i] = 'x';
     }
     for(int i = 1; i < length - 1; ++i) {
-        MazeStructure[i][width-1] = w;
-        MazeStructure[i][0] = w;
+        MazeStructure[i][width-1] = 'x';
+        MazeStructure[i][0] = 'x';
         for(int j = 1; j < width - 1; ++j) {
-            MazeStructure[i][j] = a;
+            MazeStructure[i][j] = '.';
         }
     }
     RecursiveFill(0,0, length-1, width - 1);
     // place entrance
-
+    CreateMazeEntrance();
     PrintMazeInfo();
 }
 
@@ -148,11 +167,11 @@ void MazeUtil::PrintMazeInfo() {
     std::cout << "**End Printing Maze**" << std::endl;
 }
 
-
 MazeUtil::~MazeUtil() {
     for(int i = 0; i < length; ++i) {
         delete[] MazeStructure[i]; // delete inner arrays
     }
 
     delete[] MazeStructure;
+    MazeStructure = nullptr;
 }

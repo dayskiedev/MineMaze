@@ -16,6 +16,7 @@ class MazeUtil {
         void CreateStructure();
         void CreateStructureTerminal();
         void CreatureStructureRandom(bool mode);
+        void CreateMazeEntrance();
 
         void PrintMazeInfo();
 
