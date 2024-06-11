@@ -29,7 +29,7 @@ class Agent
 public:
     Agent();
     ~Agent();
-    void placePlayer(mcpp::Coordinate basePoint);
+    void placePlayer(mcpp::Coordinate basePoint, bool mode);
     void solveMaze();
 
 

@@ -9,10 +9,13 @@ Agent::~Agent()
 {
 }
 
-void Agent::placePlayer(mcpp::Coordinate mazeStartPos) {
+void Agent::placePlayer(mcpp::Coordinate basePoint, bool mode) {
     mcpp::MinecraftConnection mc;
     
-    mc.setPlayerPosition(mazeStartPos);
+    //if !mode = normal
+    //if mode = test
+
+    mc.setPlayerPosition(basePoint);
 
 }
 
@@ -141,32 +144,28 @@ std::cout << "Move.ZP.1.4.2" << std::endl;
                         }  
                 }
                 
-std::cout << "1.4" << std::endl;
             }
         }
         
         
         else if (!(mc.getBlock(pointLoc + MOVE_XMINUS) == mcpp::Blocks::AIR) && !(mc.getBlock(pointLoc + MOVE_XPLUS) == mcpp::Blocks::AIR)) { //wall either side on Xplus and Xminus
-std::cout << "2" << std::endl;
-            
             if (!(mc.getBlock(pointLoc + MOVE_ZMINUS) == mcpp::Blocks::AIR)) { //If zminus is blocked
-std::cout << "2.1" << std::endl;
                 while (quit == 0) {
                     if (solveCord.size() == 0) { //Straight line down zPlus
-std::cout << "2.1.1" << std::endl;
                         while (mc.getBlock(pointLoc + MOVE_ZPLUS) == mcpp::Blocks::AIR) {
                             pointLoc = pointLoc + MOVE_ZPLUS;
                             solveCord.push_back(pointLoc);
+std::cout << "MoveZP.2.1.1" << std::endl;
                         }
                         if (!(mc.getBlock(pointLoc + MOVE_XMINUS) == mcpp::Blocks::AIR) && !(mc.getBlock(pointLoc + MOVE_ZPLUS) == mcpp::Blocks::AIR)) { //Meets a corner
                             pointLoc = pointLoc + MOVE_XPLUS;
                             solveCord.push_back(pointLoc);
-std::cout << "2.1.1.1" << std::endl;
+std::cout << "MoveXP.2.1.1.1" << std::endl;
                         }
                         else if (!(mc.getBlock(pointLoc + MOVE_XPLUS) == mcpp::Blocks::AIR) && !(mc.getBlock(pointLoc + MOVE_ZPLUS) == mcpp::Blocks::AIR)) { //Meets other corner
                             pointLoc = pointLoc + MOVE_XMINUS;
                             solveCord.push_back(pointLoc); 
-std::cout << "2.1.1.2" << std::endl;
+std::cout << "MoveXM.2.1.1.2" << std::endl;
                         } 
                         quit++;
                     }
@@ -174,18 +173,18 @@ std::cout << "2.1.1.2" << std::endl;
                         pointLoc = solveCord[(solveCord.size() - 1)] + MOVE_XMINUS;
                         solveCord.push_back(pointLoc);
                         quit++;
-std::cout << "2.1.2" << std::endl;
+std::cout << "MoveXM.2.1.2" << std::endl;
                     }
                     else if ((mc.getBlock(solveCord[(solveCord.size() - 1)] + MOVE_XPLUS) == mcpp::Blocks::AIR) && solveCord.size() > 0) { // ^
                         pointLoc = solveCord[(solveCord.size() - 1)] + MOVE_XPLUS;
                         solveCord.push_back(pointLoc);
                         quit++;
-std::cout << "2.1.3" << std::endl;
+std::cout << "MoveXP.2.1.3" << std::endl;
                     }
                     else { //Remove wrong path from vector
                         solveCord.pop_back();
                         pointLoc = solveCord[(solveCord.size() - 1)];
-std::cout << "2.1.4" << std::endl;
+std::cout << "Retrace.2.1.4" << std::endl;
                     }
                 }
                 quit = 0;
@@ -193,23 +192,22 @@ std::cout << "2.1.4" << std::endl;
             }
             
             else if (!(mc.getBlock(pointLoc + MOVE_ZPLUS) == mcpp::Blocks::AIR)) {
-std::cout << "2.2" << std::endl;
                 while (quit == 0) {
                     if (solveCord.size() == 0) { //Straight line down zPlus
-std::cout << "2.2.1" << std::endl;
                         while (mc.getBlock(pointLoc + MOVE_ZMINUS) == mcpp::Blocks::AIR) {
                             pointLoc = pointLoc + MOVE_ZMINUS;
                             solveCord.push_back(pointLoc);
+std::cout << "MoveZM.2.2" << std::endl;
                         }
                         if (!(mc.getBlock(pointLoc + MOVE_XMINUS) == mcpp::Blocks::AIR) && !(mc.getBlock(pointLoc + MOVE_ZMINUS) == mcpp::Blocks::AIR)) { //Meets a corner
                             pointLoc = pointLoc + MOVE_XPLUS;
                             solveCord.push_back(pointLoc);
-std::cout << "2.1.1.1" << std::endl;
+std::cout << "MoveXP.2.2.1.1" << std::endl;
                         }
                         else if (!(mc.getBlock(pointLoc + MOVE_XPLUS) == mcpp::Blocks::AIR) && !(mc.getBlock(pointLoc + MOVE_ZMINUS) == mcpp::Blocks::AIR)) { //Meets other corner
                             pointLoc = pointLoc + MOVE_XMINUS;
                             solveCord.push_back(pointLoc);   
-std::cout << "2.1.1.2" << std::endl;
+std::cout << "MoveXM.2.2.1.2" << std::endl;
                         } 
                         quit++;
                     }
@@ -217,18 +215,18 @@ std::cout << "2.1.1.2" << std::endl;
                         pointLoc = solveCord[(solveCord.size() - 1)] + MOVE_XMINUS;
                         solveCord.push_back(pointLoc);
                         quit++;
-std::cout << "2.2.2" << std::endl;
+std::cout << "MoveXM.2.2.2" << std::endl;
                     }
                     else if ((mc.getBlock(solveCord[(solveCord.size() - 1)] + MOVE_XPLUS) == mcpp::Blocks::AIR) && solveCord.size() > 0) { // ^
                         pointLoc = solveCord[(solveCord.size() - 1)] + MOVE_XPLUS;
                         solveCord.push_back(pointLoc);
                         quit++;
-std::cout << "movXp" << std::endl;
+std::cout << "MoveXP.2.2.3" << std::endl;
                     }
                     else { //Remove wrong path from vector
                         solveCord.pop_back();
                         pointLoc = solveCord[(solveCord.size() - 1)];
-std::cout << "2.2.4" << std::endl;
+std::cout << "Retrace.2.2.4" << std::endl;
                     }
                     
                 }
@@ -241,12 +239,12 @@ std::cout << "2.2.4" << std::endl;
                     if (!(mc.getBlock(pointLoc + MOVE_XMINUS) == mcpp::Blocks::AIR) && !(mc.getBlock(pointLoc + MOVE_ZMINUS) == mcpp::Blocks::AIR)) { //Meets a corner
                             pointLoc = pointLoc + MOVE_XPLUS;
                             solveCord.push_back(pointLoc);
-std::cout << "moveXp" << std::endl;
+std::cout << "MoveXP.2.3.1" << std::endl;
                         }
                         else if (!(mc.getBlock(pointLoc + MOVE_XPLUS) == mcpp::Blocks::AIR) && !(mc.getBlock(pointLoc + MOVE_ZMINUS) == mcpp::Blocks::AIR)) { //Meets other corner
                             pointLoc = pointLoc + MOVE_XMINUS;
                             solveCord.push_back(pointLoc);   
-std::cout << "moveXm" << std::endl;
+std::cout << "moveXM.2.3.2" << std::endl;
                         } 
                 }
             }
@@ -257,12 +255,12 @@ std::cout << "moveXm" << std::endl;
                     if (!(mc.getBlock(pointLoc + MOVE_XMINUS) == mcpp::Blocks::AIR) && !(mc.getBlock(pointLoc + MOVE_ZPLUS) == mcpp::Blocks::AIR)) { //Meets a corner
                             pointLoc = pointLoc + MOVE_XPLUS;
                             solveCord.push_back(pointLoc);
-std::cout << "2.4.1" << std::endl;
+std::cout << "MoveXP.2.4.1" << std::endl;
                         }
                         else if (!(mc.getBlock(pointLoc + MOVE_XPLUS) == mcpp::Blocks::AIR) && !(mc.getBlock(pointLoc + MOVE_ZPLUS) == mcpp::Blocks::AIR)) { //Meets other corner
                             pointLoc = pointLoc + MOVE_XMINUS;
                             solveCord.push_back(pointLoc); 
-std::cout << "2.4.2" << std::endl;
+std::cout << "MoveXM.2.4.2" << std::endl;
                         } 
                 }
                 
