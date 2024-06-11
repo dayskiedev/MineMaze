@@ -4,6 +4,7 @@
 #include <iostream>
 #include <mcpp/mcpp.h>
 #include <unistd.h>   
+#include <vector>
 
 #define MOVE_XPLUS mcpp::Coordinate(1,0,0)
 #define MOVE_XMINUS mcpp::Coordinate(-1,0,0)
@@ -33,10 +34,10 @@ public:
 
 
 private:
-    /* data */
+    /* data */  
+    void printAndGuideSolve (std::vector<mcpp::Coordinate> completeVec);
     mcpp::MinecraftConnection mc;
     mcpp::Coordinate pointLoc;
-    mcpp::Coordinate startLoc;
 
 };
 
