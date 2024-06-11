@@ -24,19 +24,10 @@ int main(int argc, char *argv[])
 {
     mcpp::MinecraftConnection mc;
     bool mode = NORMAL_MODE;
-    if (argc > 1)
-    {
-        mode = compareCharStr(argv[1], "-testmode");
-    }
+    if (argc > 1) { mode = compareCharStr(argv[1], "-testmode"); }
 
-    if (!mode)
-    {
-        mc.postToChat("RUNNING IN NORMAL MODE");
-    }
-    if (mode)
-    {
-        mc.postToChat("RUNNING IN TEST MODE");
-    }
+    if (!mode) { mc.postToChat("RUNNING IN NORMAL MODE"); }
+    if (mode) { mc.postToChat("RUNNING IN TEST MODE"); }
 
     mc.doCommand("time set day");
 
@@ -52,8 +43,7 @@ int main(int argc, char *argv[])
     // State machine for menu
     while (curState != ST_Exit)
     {
-        if (curState == ST_Main)
-        {
+        if (curState == ST_Main) {
             do
             {
                 printMainMenu();
@@ -61,32 +51,21 @@ int main(int argc, char *argv[])
             curState = States(stateNum);
         }
 
-        if (curState == ST_CreateMaze)
-        {
+        if (curState == ST_CreateMaze) {
             do
             {
                 printGenerateMazeMenu();
             } while (!sanatiseInput(3, stateNum));
 
             // due to the input being sanatised it should only ever be 1-3 when it reaches here
-            if (stateNum == 1)
-            {
-                mu.CreateStructureTerminal();
-            }
-            if (stateNum == 2)
-            {
-                mu.CreatureStructureRandom(mode);
-            }
-            if (stateNum == 3)
-            {
-                curState = ST_Main;
-            }
+            if (stateNum == 1) { mu.CreateStructureTerminal(); }
+            if (stateNum == 2) { mu.CreatureStructureRandom(mode); }
+            if (stateNum == 3) { curState = ST_Main; }
 
             curState = ST_Main;
         }
 
-        if (curState == ST_BuildMaze)
-        {
+        if (curState == ST_BuildMaze) {
             std::cout << "BUILDING MAZE..." << std::endl;
             curState = ST_Main;
             Maze maze(mu.getBasePoint(), mu.getLength(), mu.getWidth(), mu.GetStructure(), mode);
@@ -94,8 +73,7 @@ int main(int argc, char *argv[])
             maze.buildMaze();
         }
 
-        if (curState == ST_SolveMaze)
-        {
+        if (curState == ST_SolveMaze) {
             do
             {
                 printSolveMazeMenu();

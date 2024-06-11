@@ -11,7 +11,6 @@
 class MazeUtil {
     public:
         ~MazeUtil(); // place to dealocate memory
-        char** GetStructure();
 
         void CreateStructure();
         void CreateStructureTerminal();
@@ -23,14 +22,15 @@ class MazeUtil {
         void RecursiveFill(int minh, int minw, int maxh, int maxw);
 
         mcpp::Coordinate MazeRandStartCoord();
+
         int getLength() { return length; }
         int getWidth() { return width; }
+        char** GetStructure() { return MazeStructure; }
         mcpp::Coordinate getBasePoint() { return basePoint; }
 
     private:
-        char** MazeStructure = nullptr; // 2d array of chars
-        // ms[height][width]
-        mcpp::Coordinate basePoint;
-        int width = 0;
+         int width = 0;
         int length = 0;
+        char** MazeStructure = nullptr; // 2d array of chars
+        mcpp::Coordinate basePoint;
 };

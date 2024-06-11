@@ -3,12 +3,10 @@
 #include <stdlib.h>
 #include <random>
 
-char** MazeUtil::GetStructure() { return MazeStructure; } 
-
 mcpp::Coordinate MazeUtil::MazeRandStartCoord() {
     mcpp::MinecraftConnection mc;
     int x;
-    int y = mc.getPlayerPosition().y;
+    int y = basePoint.y;
     int z;
 
     do{
@@ -17,48 +15,7 @@ mcpp::Coordinate MazeUtil::MazeRandStartCoord() {
     }
     while (MazeStructure[x][z] != '.');
     
-    return mcpp::Coordinate(x,y,z);
-}
-
-void MazeUtil::CreateStructure() {
-    // get basepoint for maze
-    mcpp::MinecraftConnection mc;
-    std::cout << "In Minecraft, navigate to where you need the maze to be built and type - done" << std::endl;
-    std::string input;
-    std::cin >> input; 
-    while (input.compare("done"))
-    {
-        std::cout << "Invalid input! please enter 'done' when you have found a desirable location!" << std::endl;
-        std::cin >> input;
-    }
-
-    basePoint = mc.getPlayerPosition();
-    
-    std::cout << "Enter the length and width of the maze:" << std::endl; 
-    std::cin >> length;// no input validation
-    std::cin >> width;
-
-    MazeStructure = new char*[length];
-    for(int i = 0; i < length; i++) {
-        MazeStructure[i] = new char[width];
-    }
-}
-
-void MazeUtil::CreateStructureTerminal() {
-    CreateStructure();
-
-    std::cout << "Enter the maze structure (" << length << "x" << width << "): " << std::endl;
-    // read in input from terminal
-    char c;
-    for(int i = 0; i < length; ++i) {
-        for(int j = 0; j < width; ++j) {
-            std::cin >> c;
-            MazeStructure[i][j] = c;
-        }
-    }
-
-    std::cout << "Maze read successfully!" << std::endl;
-    PrintMazeInfo();
+    return mcpp::Coordinate(x + basePoint.x ,y,z + basePoint.z);
 }
 
 void MazeUtil::CreateMazeEntrance() {
@@ -86,10 +43,78 @@ void MazeUtil::CreateMazeEntrance() {
     } 
 }
 
-void MazeUtil::CreatureStructureRandom(bool mode) {
+void MazeUtil::CreateStructure() {
+    // get basepoint for maze
+    mcpp::MinecraftConnection mc;
+    std::cout << "In Minecraft, navigate to where you need the maze to be built and type - done" << std::endl;
+    std::string input;
+    std::cin >> input; 
+    while (input.compare("done"))
+    {
+        std::cout << "Invalid input! please enter 'done' when you have found a desirable location!" << std::endl;
+        std::cin >> input;
+    }
+
+    basePoint = mc.getPlayerPosition();
+
+    // make sure length and width are valid inputs (odd numbers)
+    while(true) {
+        std::cout << "Enter the length and width of the maze:" << std::endl; 
+        std::cin >> length;// no input validation
+        if(std::cin.good()) { input = true; }
+        else {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+            std::cout << "Length must be an integer!" << std::endl;
+            continue;
+        }
+        if(length % 2 == 0) {
+            std::cout << "Length must be an odd number!" << std::endl;
+            continue;
+        }
+
+        std::cin >> width;
+        if(std::cin.good()) { input = true; }
+        else {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Width must be an integer!" << std::endl;
+            continue;
+        }
+
+        if(width % 2 == 0 ) {
+            std::cout << "Width must be an odd number!" << std::endl;
+            continue;
+        }
+        break;
+    }
+
+    MazeStructure = new char*[length];
+    for(int i = 0; i < length; i++) {
+        MazeStructure[i] = new char[width];
+    }
+}
+
+void MazeUtil::CreateStructureTerminal() {
     CreateStructure();
 
+    std::cout << "Enter the maze structure (" << length << "x" << width << "): " << std::endl;
+    // read in input from terminal
+    char c;
+    for(int i = 0; i < length; ++i) {
+        for(int j = 0; j < width; ++j) {
+            std::cin >> c;
+            MazeStructure[i][j] = c;
+        }
+    }
 
+    std::cout << "Maze read successfully!" << std::endl;
+    PrintMazeInfo();
+}
+
+
+void MazeUtil::CreatureStructureRandom(bool mode) {
+    CreateStructure();
     // creates the x outline for maze and fills with .'s
     for(int i = 0; i < width; ++i) { 
         MazeStructure[0][i] = 'x';
@@ -110,6 +135,7 @@ void MazeUtil::CreatureStructureRandom(bool mode) {
 
 void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw) {
     // works when len and wid are same but not when different?
+    // mode true means running in testmode
     std::random_device rnd;
 
     std::uniform_int_distribution<int> dir(0,1);
