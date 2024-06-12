@@ -3,6 +3,7 @@
 #include <chrono>
 #include <thread>
 
+/**
 Maze::Maze()
 {
     this->length = 0;
@@ -11,6 +12,7 @@ Maze::Maze()
     this->headBlock = nullptr;
     this->headCoord = nullptr;
 }
+*/
 
 Maze::Maze(mcpp::Coordinate basePoint, int xlen,
            int zlen, char **mazeStructure, bool mode)
