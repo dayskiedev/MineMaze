@@ -5,20 +5,21 @@
 #include <chrono>
 #include <thread>
 
-class MazeCoord
+class CoordNode
 {
 public:
-    // MazeCoord(mcpp::Coordinate* coord);
-    mcpp::Coordinate *coord;
-    MazeCoord *next;
+    CoordNode(mcpp::Coordinate);
+    mcpp::Coordinate coord;
+    CoordNode *nextCoord;
 };
 
-class MazeBlock
+class BlockNode
 {
 public:
-    // MazeBlock(mcpp::BlockType block);
-    mcpp::BlockType *block;
-    MazeBlock *next;
+    BlockNode(int id, int modifier);
+    int id;
+    int modifier;
+    BlockNode *nextBlock;
 };
 
 class Maze
@@ -28,28 +29,30 @@ public:
 
     Maze(mcpp::Coordinate basePoint, int xlen,
          int zlen, char **mazeStructure,
-         bool mode);
+        bool mode);
     void flattenTerrain();
 
     void buildMaze();
+
+    void restore();
 
     ~Maze();
 
 private:
     mcpp::MinecraftConnection mc;
     mcpp::Coordinate basePoint;
-    MazeCoord *headCoord;
-    MazeBlock *headBlock;
+    CoordNode *headCoord;
+    BlockNode *headBlock;
     int length;
     int width;
     bool mode;
     char **mazeStructure;
 
-    void coordPushBack(mcpp::Coordinate *coord);
-    void coordPopBack();
-    void blockPushBack(mcpp::BlockType *block);
-    void blockPopBack();
-    int mazeSize() const;
+    //need to pass in the [[nodiscard]] Coordinate clone() const;
+    //member function when calling this function to copy coordinate over to list
+    void addCoordToStart(mcpp::Coordinate coord);
+
+    void addBlockToStart(int id, int mod);
 };
 
 #endif // ASSIGN_MAZE_H

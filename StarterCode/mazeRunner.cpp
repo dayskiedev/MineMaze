@@ -33,7 +33,6 @@ int main(int argc, char *argv[])
 
     MazeUtil mu;
     Agent agent;
-    // Maze maze;
 
     std::string input;
     States curState = ST_Main;
@@ -68,9 +67,8 @@ int main(int argc, char *argv[])
         if (curState == ST_BuildMaze) {
             std::cout << "BUILDING MAZE..." << std::endl;
             curState = ST_Main;
-            Maze maze(mu.getBasePoint(), mu.getLength(), mu.getWidth(), mu.GetStructure(), mode);
-            maze.flattenTerrain();
-            maze.buildMaze();
+
+            Maze(mu.getBasePoint(), mu.getLength(), mu.getWidth(), mu.GetStructure(), mode);
         }
 
         if (curState == ST_SolveMaze) {
