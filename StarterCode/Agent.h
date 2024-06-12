@@ -32,10 +32,13 @@ public:
     void placePlayer(mcpp::Coordinate basePoint, bool mode);
     void solveMaze();
 
-
 private:
     /* data */  
     void printAndGuideSolve (std::vector<mcpp::Coordinate> completeVec);
+    void zMinus (mcpp::Coordinate currentCor, int vecCounter);
+    void zPlus (mcpp::Coordinate currentCor, int vecCounter);
+    void xMinus (mcpp::Coordinate currentCor, int vecCounter);
+    void xPlus (mcpp::Coordinate currentCor, int vecCounter);
     mcpp::MinecraftConnection mc;
     mcpp::Coordinate pointLoc;
 
