@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <random>
 
+// describe class/what it does
+
 mcpp::Coordinate MazeUtil::MazeRandStartCoord() {
     mcpp::MinecraftConnection mc;
     int x;
@@ -55,7 +57,7 @@ void MazeUtil::CreateStructure() {
         std::cin >> input;
     }
 
-    basePoint = mc.getPlayerPosition();
+    basePoint = mcpp::Coordinate(0,0,0);
 
     // make sure length and width are valid inputs (odd numbers)
     while(true) {
@@ -112,7 +114,6 @@ void MazeUtil::CreateStructureTerminal() {
     PrintMazeInfo();
 }
 
-
 void MazeUtil::CreatureStructureRandom(bool mode) {
     CreateStructure();
     // creates the x outline for maze and fills with .'s
@@ -127,22 +128,32 @@ void MazeUtil::CreatureStructureRandom(bool mode) {
             MazeStructure[i][j] = '.';
         }
     }
-    RecursiveFill(0,0, length-1, width - 1);
+    testmode = mode;
+
+    RecursiveFill(0,0, length-1, width - 1, 0);
     // place entrance
     CreateMazeEntrance();
     PrintMazeInfo();
 }
 
-void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw) {
+void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
     // works when len and wid are same but not when different?
     // mode true means running in testmode
+    int direction;
     std::random_device rnd;
 
     std::uniform_int_distribution<int> dir(0,1);
     std::uniform_int_distribution<int> rndWidth(minw + 1, maxw - 1);
     std::uniform_int_distribution<int> rndHeight(minh + 1, maxh -1);
 
-    int direction = dir(rnd); // where 0 = horizontal
+    if(!testmode) {
+        direction = dir(rnd); // where 0 = horizontal
+    }
+
+    if(testmode) {
+        direction = 0;
+    }
+
     int wall = 0;
 
     if(maxh - 2 <= minh) { return; }
@@ -160,8 +171,8 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw) {
         MazeStructure[horizontalSplit][wall] = '.';
 
         // now we treat the horizontal split as the max for the top square and the min for the bottom square
-        RecursiveFill(minh, minw, horizontalSplit, maxw);
-        RecursiveFill(horizontalSplit, minw, maxh, maxw);
+        RecursiveFill(minh, minw, horizontalSplit, maxw, direction);
+        RecursiveFill(horizontalSplit, minw, maxh, maxw, direction);
     }
     if(direction == 1) {
         int verticalSplit = 0;
@@ -175,8 +186,8 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw) {
         while (wall % 2 == 0);
         MazeStructure[wall][verticalSplit] = '.'; 
 
-        RecursiveFill(minh, minw, maxh, verticalSplit);
-        RecursiveFill(minh, verticalSplit, maxh, maxw);
+        RecursiveFill(minh, minw, maxh, verticalSplit, direction);
+        RecursiveFill(minh, verticalSplit, maxh, maxw, direction);
     }
 }
 
