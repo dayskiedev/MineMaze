@@ -7,9 +7,6 @@
 #include "Agent.h"
 #include "MazeUtil.h"
 
-#define NORMAL_MODE 0
-#define TESTING_MODE 1
-
 enum States
 {
     ST_Main = 0,
@@ -23,11 +20,21 @@ enum States
 int main(int argc, char *argv[])
 {
     mcpp::MinecraftConnection mc;
-    bool mode = NORMAL_MODE;
-    if (argc > 1) { mode = compareCharStr(argv[1], "-testmode"); }
+    bool mode = false;
+    bool enhance = false; // enchance mode
+    if (argc > 1) { 
+        for(int i = 0; i < argc; ++i) {
+            if(!mode) { mode = compareCharStr(argv[i], "-testmode"); } 
+            if(!enhance) { enhance = compareCharStr(argv[i], "-enhance"); } 
+        } // loops through every extra argument provided to see if they match either of these
+        // checks if they are false to then see if they are true, because the current input could be -enhance
+        // and while testmode is already true this could otherwise set it back to false unintentionally
+    }
 
     if (!mode) { mc.postToChat("RUNNING IN NORMAL MODE"); }
     if (mode) { mc.postToChat("RUNNING IN TEST MODE"); }
+
+    if (enhance) { mc.postToChat("RUNNING WITH ENHANCMENTS"); }
 
     mc.doCommand("time set day");
 
