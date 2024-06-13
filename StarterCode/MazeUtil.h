@@ -13,11 +13,15 @@ class MazeUtil {
         ~MazeUtil(); // place to dealocate memory
 
         void CreateStructure();
-        void CreateStructureTerminal();
+        void CreateStructureTerminal(bool enhancment);
         void CreatureStructureRandom(bool mode);
         void CreateMazeEntrance();
 
         void PrintMazeInfo();
+
+        // enhancment
+        void ValidMaze();
+        void Fill(int** compArr, int sl, int sw);
 
         void RecursiveFill(int minh, int minw, int maxh, int maxw, int d);
 

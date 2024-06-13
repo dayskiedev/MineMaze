@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
             } while (!sanatiseInput(3, stateNum));
 
             // due to the input being sanatised it should only ever be 1-3 when it reaches here
-            if (stateNum == 1) { mu.CreateStructureTerminal(); }
+            if (stateNum == 1) { mu.CreateStructureTerminal(enhance); }
             if (stateNum == 2) { mu.CreatureStructureRandom(mode); }
             if (stateNum == 3) { curState = ST_Main; }
 

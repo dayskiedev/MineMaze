@@ -97,7 +97,7 @@ void MazeUtil::CreateStructure() {
     }
 }
 
-void MazeUtil::CreateStructureTerminal() {
+void MazeUtil::CreateStructureTerminal(bool en) {
     CreateStructure();
 
     std::cout << "Enter the maze structure (" << length << "x" << width << "): " << std::endl;
@@ -110,8 +110,58 @@ void MazeUtil::CreateStructureTerminal() {
         }
     }
 
+    ValidMaze();
+
     std::cout << "Maze read successfully!" << std::endl;
     PrintMazeInfo();
+}
+
+void MazeUtil::ValidMaze() {
+    // flood fill
+    // if floodfill grid doesnt match, then uh oh
+
+    // create 2d arry matrix to fill out
+    int** compArr = new int*[length];
+    for(int i = 0; i < length; ++i) {
+        compArr[i] = new int[width];
+    }
+
+    for(int i = 0; i < length; ++i) {
+        for(int j = 0; j < width; ++j) { compArr[i][j] = 0; }
+    }
+    // fill with 0's
+    // change to auto find
+
+    Fill(compArr, 1, 6);
+    std::cout << "Flood fill results: " << std::endl;
+    for(int i = 0; i < length; ++i) {
+        for(int j = 0; j < width; ++j) {
+            std::cout << compArr[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    // pick starting point
+    // swap to 1 if applicable
+    // check if direction can move (ie next spot is 0)
+    // move to that direction
+    // repeat
+
+    // return if not equal to a . or if it goes out of bounds
+}
+
+void MazeUtil::Fill(int** compArr, int sl, int sw) {
+    if(sl < 0 || sw < 0 || sl >= length || sw >= width 
+    || MazeStructure[sl][sw] != '.' || compArr[sl][sw] == 1) { return; }
+    // if current spot is not a dot we go back
+    // but we also need to make sure the spot isnt filled already
+
+    compArr[sl][sw] = 1;
+    // move onto 4 other directions
+    Fill(compArr, sl - 1, sw); // up
+    Fill(compArr, sl + 1, sw); // down
+    Fill(compArr, sl, sw - 1); // left
+    Fill(compArr, sl, sw + 1); // right
 }
 
 void MazeUtil::CreatureStructureRandom(bool mode) {
@@ -174,13 +224,6 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
         while ( wall % 2 == 0);
         MazeStructure[horizontalSplit][wall] = '.';
 
-        for(int i = 0; i < length; ++i) {
-            for(int j = 0; j < width; ++j) {
-                std::cout << MazeStructure[i][j] << " ";
-            }
-            std::cout << std::endl;
-        }
-        std::cout << std::endl;
 
         // now we treat the horizontal split as the max for the top square and the min for the bottom square
         // and if in test mode set the direction to the opposite (dont need to check with another if statement it already checks at the start)
@@ -201,15 +244,6 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
         do{ wall = rndHeight(rnd); }
         while (wall % 2 == 0);
         MazeStructure[wall][verticalSplit] = '.'; 
-
-        for(int i = 0; i < length; ++i) {
-            for(int j = 0; j < width; ++j) {
-                std::cout << MazeStructure[i][j] << " ";
-            }
-            std::cout << std::endl;
-        }
-        std::cout << std::endl;
-        //direction = 0;
 
         RecursiveFill(minh, minw, maxh, verticalSplit, direction);
         RecursiveFill(minh, verticalSplit, maxh, maxw, direction);
