@@ -146,18 +146,22 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
     std::uniform_int_distribution<int> rndWidth(minw + 1, maxw - 1);
     std::uniform_int_distribution<int> rndHeight(minh + 1, maxh -1);
 
-    if(!testmode) {
-        direction = dir(rnd); // where 0 = horizontal
+    if(!testmode) { 
+        direction = dir(rnd); 
     }
-
-    if(testmode) {
-        direction = 0;
-    }
+    // if not in test mode direction will be random, if in test mode direction depends on previous direction
+    if(testmode) { direction = d; }
 
     int wall = 0;
-
-    if(maxh - 2 <= minh) { return; }
-    if(maxw - 2 <= minw) { return; }
+    if(maxh - 2 <= minh) { 
+        std::cout << "should end here btw" << std::endl;
+        return; 
+        
+    }
+    if(maxw - 2 <= minw) { 
+        std::cout << "should end here btw" << std::endl;
+        return; 
+    }
 
     if(direction == 0) {
         int horizontalSplit = 0;
@@ -170,7 +174,19 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
         while ( wall % 2 == 0);
         MazeStructure[horizontalSplit][wall] = '.';
 
+        for(int i = 0; i < length; ++i) {
+            for(int j = 0; j < width; ++j) {
+                std::cout << MazeStructure[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
+        std::cout << std::endl;
+
         // now we treat the horizontal split as the max for the top square and the min for the bottom square
+        // and if in test mode set the direction to the opposite (dont need to check with another if statement it already checks at the start)
+
+        //direction = 1;
+
         RecursiveFill(minh, minw, horizontalSplit, maxw, direction);
         RecursiveFill(horizontalSplit, minw, maxh, maxw, direction);
     }
@@ -185,6 +201,15 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
         do{ wall = rndHeight(rnd); }
         while (wall % 2 == 0);
         MazeStructure[wall][verticalSplit] = '.'; 
+
+        for(int i = 0; i < length; ++i) {
+            for(int j = 0; j < width; ++j) {
+                std::cout << MazeStructure[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
+        std::cout << std::endl;
+        //direction = 0;
 
         RecursiveFill(minh, minw, maxh, verticalSplit, direction);
         RecursiveFill(minh, verticalSplit, maxh, maxw, direction);
