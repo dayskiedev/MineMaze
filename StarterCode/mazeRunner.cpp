@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
             if (stateNum == 1)
             {
                 std::cout << "Solve Manually" << std::endl;
-                agent.placePlayer(mu.MazeRandStartCoord(), mode);
+                agent.placePlayer(mu.MazeRandStartCoord());
             }
             if (stateNum == 2)
             {

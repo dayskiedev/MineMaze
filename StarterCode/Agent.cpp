@@ -9,15 +9,8 @@ Agent::~Agent()
 {
 }
 
-void Agent::placePlayer(mcpp::Coordinate basePoint, bool mode) {
+void Agent::placePlayer(mcpp::Coordinate basePoint) {
     mcpp::MinecraftConnection mc;
-    
-    // if (!mode) {
-    //     = normal
-    // }
-    // else if (mode) {
-    //     = test
-    // }
 
     mc.setPlayerPosition(basePoint);
 }
@@ -49,7 +42,7 @@ void Agent::solveMaze() {
     solveCord.clear();
 }
 
-void Agent::printAndGuideSolve (std::vector<mcpp::Coordinate> completeVec) { 
+void Agent::printAndGuideSolve (std::vector<mcpp::Coordinate> completeVec) { // Print all coordinate in the vector which leads to the blue carpet
     mcpp::MinecraftConnection mc;
 
     for (unsigned long int i = 0; i < completeVec.size(); i++) {
@@ -60,8 +53,15 @@ void Agent::printAndGuideSolve (std::vector<mcpp::Coordinate> completeVec) {
         mc.setBlock(completeVec[i], mcpp::Blocks::AIR);
     }
 }
+   
 
-void Agent::zPlus(mcpp::Coordinate currentCor, int vecCounter) {
+    /*
+    The 4 functions zPlus, zMinus, xPlus and xMinus are done so to mimic a first-person pov right hand solve rule
+    this is achieved by having each direction zPlus, zMinus ... have thier own seperate and different direction of thre "right"
+    the functions keep calling each other until the blue carpet is stubled upon, only then will the function calling stop
+    and be directed back to the while loop for an exit. 
+    */
+void Agent::zPlus(mcpp::Coordinate currentCor, int vecCounter) { 
     mcpp::MinecraftConnection mc;
 
     currentCor = currentCor + MOVE_ZPLUS;
