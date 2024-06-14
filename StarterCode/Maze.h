@@ -29,7 +29,7 @@ public:
 
     Maze(mcpp::Coordinate basePoint, int xlen,
          int zlen, char **mazeStructure,
-        bool mode);
+         bool mode);
     void flattenTerrain();
 
     void buildMaze();
@@ -48,8 +48,8 @@ private:
     bool mode;
     char **mazeStructure;
 
-    //need to pass in the [[nodiscard]] Coordinate clone() const;
-    //member function when calling this function to copy coordinate over to list
+    // need to pass in the [[nodiscard]] Coordinate clone() const;
+    // member function when calling this function to copy coordinate over to list
     void addCoordToStart(mcpp::Coordinate coord);
 
     void addBlockToStart(int id, int mod);

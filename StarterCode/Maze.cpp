@@ -44,15 +44,14 @@ BlockNode::BlockNode(int id, int mod)
 
 void Maze::addCoordToStart(mcpp::Coordinate coord)
 {
-    CoordNode * newCoord = new CoordNode(coord);
+    CoordNode *newCoord = new CoordNode(coord);
     newCoord->nextCoord = this->headCoord;
     this->headCoord = newCoord;
-
 }
 
 void Maze::addBlockToStart(int id, int mod)
 {
-    BlockNode * newBlock = new BlockNode(id, mod);
+    BlockNode *newBlock = new BlockNode(id, mod);
     newBlock->nextBlock = this->headBlock;
     this->headBlock = newBlock;
 }
@@ -62,9 +61,9 @@ void Maze::flattenTerrain()
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
     mcpp::Coordinate cornerFromBase(basePoint.x + length + 2, basePoint.y, basePoint.z + width + 2);
 
-    std::vector<mcpp::Coordinate*> tempCoords;
-    std::vector<mcpp::BlockType*> tempBlocks;
-    
+    std::vector<mcpp::Coordinate *> tempCoords;
+    std::vector<mcpp::BlockType *> tempBlocks;
+
     int axisIndex_z = 0;
     for (size_t i = 0; i < mc.getHeights(basePoint, cornerFromBase).size(); ++i)
     {
@@ -80,7 +79,7 @@ void Maze::flattenTerrain()
                 {
                     mcpp::Coordinate *coordinate = new mcpp::Coordinate((basePoint.x + axisIndex_x),
                                                                         (mc.getHeights(basePoint, cornerFromBase)[i][j] + level_yAxis), (basePoint.z + axisIndex_z));
-                    tempCoords.push_back(coordinate); //std::move?? or do i nedd to use clone() from mcpp
+                    tempCoords.push_back(coordinate); // std::move?? or do i nedd to use clone() from mcpp
                     mcpp::BlockType *block = new mcpp::BlockType(mc.getBlock(*getBlockCoord));
                     tempBlocks.push_back(block);
                     std::this_thread::sleep_for(std::chrono::milliseconds(50));
@@ -108,26 +107,32 @@ void Maze::flattenTerrain()
         }
         ++axisIndex_z;
     }
-    for(auto& coord : tempCoords){
+    /**
+    for (auto &coord : tempCoords)
+    {
         this->addCoordToStart(coord->clone());
     }
-    for(auto& block : tempBlocks){
+    for (auto &block : tempBlocks)
+    {
         this->addBlockToStart(block->id, block->mod);
     }
-    for(auto& coord : tempCoords){
-        delete coord;
+    for (auto &coord : tempCoords)
+    {
+        // delete coord;
     }
-    for(auto& block : tempBlocks){
-        delete block;
+    for (auto &block : tempBlocks)
+    {
+        // delete block;
     }
+    */
 }
 
 void Maze::buildMaze()
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-    std::vector<mcpp::Coordinate*> tempCoords;
-    std::vector<mcpp::BlockType*> tempBlocks;
+    std::vector<mcpp::Coordinate *> tempCoords;
+    std::vector<mcpp::BlockType *> tempBlocks;
 
     for (int row = 0; row < length; ++row)
     {
@@ -135,7 +140,7 @@ void Maze::buildMaze()
         {
             if (this->mazeStructure[row][col] == 'x')
             {
-                for (int i = 1; i < 4; ++i)
+                for (int i = 0; i < 3; ++i)
                 {
                     mcpp::Coordinate *cooridnate = new mcpp::Coordinate((basePoint.x + row + 1), (basePoint.y + i), (basePoint.z + col + 1));
                     tempCoords.push_back(cooridnate);
@@ -148,7 +153,7 @@ void Maze::buildMaze()
             }
             else if ((this->mazeStructure[row][col] == '.') && (row == 0 || row == length - 1))
             {
-                mcpp::Coordinate *cooridnate = new mcpp::Coordinate(basePoint.x, (basePoint.y + 1), (basePoint.z + col + 1));
+                mcpp::Coordinate *cooridnate = new mcpp::Coordinate(basePoint.x, (basePoint.y), (basePoint.z + col + 1));
                 tempCoords.push_back(cooridnate);
                 mcpp::BlockType *block = new mcpp::BlockType(mc.getBlock(*cooridnate));
                 tempBlocks.push_back(block);
@@ -158,7 +163,7 @@ void Maze::buildMaze()
             }
             else if ((this->mazeStructure[row][col] == '.') && (col == 0 || col == width - 1))
             {
-                mcpp::Coordinate *cooridnate = new mcpp::Coordinate((basePoint.x + row + 1), (basePoint.y + 1), basePoint.z);
+                mcpp::Coordinate *cooridnate = new mcpp::Coordinate((basePoint.x + row + 1), (basePoint.y), basePoint.z);
                 tempCoords.push_back(cooridnate);
                 mcpp::BlockType *block = new mcpp::BlockType(mc.getBlock(*cooridnate));
                 tempBlocks.push_back(block);
@@ -168,25 +173,31 @@ void Maze::buildMaze()
             }
         }
     }
-    for(auto& coord : tempCoords){
+    /**
+    for (auto &coord : tempCoords)
+    {
         this->addCoordToStart(coord->clone());
     }
-    for(auto& block : tempBlocks){
+    for (auto &block : tempBlocks)
+    {
         this->addBlockToStart(block->id, block->mod);
     }
-    for(auto& coord : tempCoords){
-        delete coord;
+    for (auto &coord : tempCoords)
+    {
+        // delete coord;
     }
-    for(auto& block : tempBlocks){
-        delete block;
+    for (auto &block : tempBlocks)
+    {
+        // delete block;
     }
+    */
 }
 
 void Maze::restore()
 {
-    CoordNode * currentCoord = this->headCoord;
-    BlockNode * currentBlock = this->headBlock;
-    while(currentCoord != nullptr)
+    CoordNode *currentCoord = this->headCoord;
+    BlockNode *currentBlock = this->headBlock;
+    while (currentCoord != nullptr)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
         mc.setBlock(currentCoord->coord, mcpp::BlockType(currentBlock->id, currentBlock->modifier));
@@ -199,15 +210,17 @@ Maze::~Maze()
 {
     restore();
 
-    while (headCoord != nullptr) {
-        CoordNode* temp = headCoord;
+    while (headCoord != nullptr)
+    {
+        CoordNode *temp = headCoord;
         headCoord = headCoord->nextCoord;
         delete temp;
         this->headCoord = nullptr;
     }
 
-    while (headBlock!= nullptr) {
-        BlockNode* temp = headBlock;
+    while (headBlock != nullptr)
+    {
+        BlockNode *temp = headBlock;
         headBlock = headBlock->nextBlock;
         delete temp;
         this->headBlock = nullptr;
