@@ -5,46 +5,36 @@
 
 // describe class/what it does
 
+
+///  
+/// Place PLayer Section - Function for placing the player in 
+///                        either a random position or a point
+///                        furtherst from the maze entrance
+///
 mcpp::Coordinate MazeUtil::MazeRandStartCoord() {
     mcpp::MinecraftConnection mc;
     int x;
     int y = basePoint.y;
     int z;
-
     do{
         x = rand() % width;
         z = rand() % length;
     }
     while (MazeStructure[x][z] != '.');
-    
     return mcpp::Coordinate(x + basePoint.x ,y,z + basePoint.z);
 }
 
-void MazeUtil::CreateMazeEntrance() {
-    int dir = rand() % 4; // 0 = up 1 = left 2 = right 3 = down
-    int pos;
-    if(dir == 0) {
-        do{pos = rand() % width; }
-        while (MazeStructure[1][pos] == 'x');
-        MazeStructure[0][pos] = '.';
-    }
-    if(dir == 1) {
-        do{pos = rand() % length; }
-        while (MazeStructure[pos][1] == 'x');
-        MazeStructure[pos][0] = '.';
-    }
-    if(dir == 2) {
-        do{pos = rand() % length; }
-        while(MazeStructure[pos][width - 2] == 'x');
-        MazeStructure[pos][width - 1] = '.';
-    }
-    if(dir == 3) {
-        do{pos = rand() % width; }
-        while(MazeStructure[length - 2][pos] == 'x');
-        MazeStructure[length - 1][pos] = '.';
-    } 
+mcpp::Coordinate MazeUtil::MazeFarFromEntance(){
+    mcpp::MinecraftConnection mc;
+    mc.postToChat("test mode tp");
+
+    return mc.getPlayerPosition();
 }
 
+
+/// @brief 
+/// Code for creating the 2d array that will hold the maze Structure
+/// @return
 void MazeUtil::CreateStructure() {
     // get basepoint for maze
     mcpp::MinecraftConnection mc;
@@ -57,7 +47,7 @@ void MazeUtil::CreateStructure() {
         std::cin >> input;
     }
 
-    basePoint = mcpp::Coordinate(0,0,0);
+    basePoint = mc.getPlayerPosition();
 
     // make sure length and width are valid inputs (odd numbers)
     while(true) {
@@ -97,6 +87,10 @@ void MazeUtil::CreateStructure() {
     }
 }
 
+///
+///  Terminal Section - Function for creating the maze from the terminal
+///                     as well as validating / fixing this maze if it contains loops
+
 void MazeUtil::CreateStructureTerminal(bool en) {
     CreateStructure();
 
@@ -128,7 +122,34 @@ void MazeUtil::ValidMaze() {
     for(int i = 0; i < length; ++i) { for(int j = 0; j < width; ++j) { compArr[i][j] = 0; } }
     // fill with 0's
 
-    Fill(compArr, 1, 6);
+    int startL = 0;
+    int startW = 0;
+    for(int i = 0; i < length; ++i) {
+        if(MazeStructure[i][0] == '.') {
+            startL = i;
+            startW = 0;
+            break;
+        }
+        else if(MazeStructure[i][width-1] == '.') {
+            startL = i;
+            startW = width - 1;
+            break;
+        }
+    };
+    for(int i = 0; i < width; ++i) {
+        if(MazeStructure[0][i] == '.') {
+            startL = 0;
+            startW = i;
+            break;
+        }
+        else if(MazeStructure[length-1][i] == '.') {
+            startL = length-1;
+            startW = i;
+            break;
+        }
+    }
+
+    FloodFill(compArr, startL, startW);
 
     std::cout << "Flood fill results: " << std::endl;
     for(int i = 0; i < length; ++i) {
@@ -159,7 +180,7 @@ void MazeUtil::ValidMaze() {
     // return if not equal to a . or if it goes out of bounds
 }
 
-void MazeUtil::Fill(int** compArr, int sl, int sw) {
+void MazeUtil::FloodFill(int** compArr, int sl, int sw) {
     if(sl < 0 || sw < 0 || sl >= length || sw >= width 
     || MazeStructure[sl][sw] != '.' || compArr[sl][sw] == 1) { return; }
     // if current spot is not a dot we go back
@@ -167,12 +188,15 @@ void MazeUtil::Fill(int** compArr, int sl, int sw) {
 
     compArr[sl][sw] = 1;
     // move onto 4 other directions
-    Fill(compArr, sl - 1, sw); // up
-    Fill(compArr, sl + 1, sw); // down
-    Fill(compArr, sl, sw - 1); // left
-    Fill(compArr, sl, sw + 1); // right
+    FloodFill(compArr, sl - 1, sw); // up
+    FloodFill(compArr, sl + 1, sw); // down
+    FloodFill(compArr, sl, sw - 1); // left
+    FloodFill(compArr, sl, sw + 1); // right
 }
 
+///
+/// Random Generation  Section - Contains functions for creating the maze with a random
+///                              structure as well as a valid but random entry point
 void MazeUtil::CreatureStructureRandom(bool mode) {
     CreateStructure();
     // creates the x outline for maze and fills with .'s
@@ -258,6 +282,35 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
         RecursiveFill(minh, verticalSplit, maxh, maxw, direction);
     }
 }
+
+void MazeUtil::CreateMazeEntrance() {
+    int dir = rand() % 4; // 0 = up 1 = left 2 = right 3 = down
+    int pos;
+    if(dir == 0) {
+        do{pos = rand() % width; }
+        while (MazeStructure[1][pos] == 'x');
+        MazeStructure[0][pos] = '.';
+    }
+    if(dir == 1) {
+        do{pos = rand() % length; }
+        while (MazeStructure[pos][1] == 'x');
+        MazeStructure[pos][0] = '.';
+    }
+    if(dir == 2) {
+        do{pos = rand() % length; }
+        while(MazeStructure[pos][width - 2] == 'x');
+        MazeStructure[pos][width - 1] = '.';
+    }
+    if(dir == 3) {
+        do{pos = rand() % width; }
+        while(MazeStructure[length - 2][pos] == 'x');
+        MazeStructure[length - 1][pos] = '.';
+    } 
+}
+
+
+/// Helper Section - Contains functions to get info
+///                  about the maze and to clean it up
 
 void MazeUtil::PrintMazeInfo() {
     std::cout << "**Printing Maze**" << std::endl;

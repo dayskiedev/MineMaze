@@ -87,7 +87,9 @@ int main(int argc, char *argv[])
             if (stateNum == 1)
             {
                 std::cout << "Solve Manually" << std::endl;
-                agent.placePlayer(mu.MazeRandStartCoord());
+                // if in testmode we want to place the player furtherst from the
+                if(mode) { agent.placePlayer(mu.MazeFarFromEntance()); }
+                else { agent.placePlayer(mu.MazeRandStartCoord()); }
             }
             if (stateNum == 2)
             {
