@@ -33,7 +33,7 @@ class MazeUtil {
         mcpp::Coordinate getBasePoint() { return basePoint; }
 
     private:
-         int width = 0;
+        int width = 0;
         int length = 0;
         char** MazeStructure = nullptr; // 2d array of chars
         mcpp::Coordinate basePoint;

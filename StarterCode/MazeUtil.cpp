@@ -125,14 +125,11 @@ void MazeUtil::ValidMaze() {
     for(int i = 0; i < length; ++i) {
         compArr[i] = new int[width];
     }
-
-    for(int i = 0; i < length; ++i) {
-        for(int j = 0; j < width; ++j) { compArr[i][j] = 0; }
-    }
+    for(int i = 0; i < length; ++i) { for(int j = 0; j < width; ++j) { compArr[i][j] = 0; } }
     // fill with 0's
-    // change to auto find
 
     Fill(compArr, 1, 6);
+
     std::cout << "Flood fill results: " << std::endl;
     for(int i = 0; i < length; ++i) {
         for(int j = 0; j < width; ++j) {
@@ -140,6 +137,18 @@ void MazeUtil::ValidMaze() {
         }
         std::cout << std::endl;
     }
+
+
+    for(int i = 0; i < length; ++i) {
+        for(int j = 0; j < width; ++j) {
+            if(MazeStructure[i][j] == '.' && compArr[i][j] == 0) {
+                std::cout << "loop detected at (" << i << "," << j << ")" << std::endl; 
+                return;
+            }
+        }
+    }
+
+    std::cout << "no loops detected." << std::endl;
 
     // pick starting point
     // swap to 1 if applicable
