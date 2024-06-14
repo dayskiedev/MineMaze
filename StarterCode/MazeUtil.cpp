@@ -11,25 +11,6 @@
 ///                        either a random position or a point
 ///                        furtherst from the maze entrance
 ///
-mcpp::Coordinate MazeUtil::MazeRandStartCoord() {
-    mcpp::MinecraftConnection mc;
-    int x;
-    int y = basePoint.y;
-    int z;
-    do{
-        x = rand() % width;
-        z = rand() % length;
-    }
-    while (MazeStructure[x][z] != '.');
-    return mcpp::Coordinate(x + basePoint.x ,y,z + basePoint.z);
-}
-
-mcpp::Coordinate MazeUtil::MazeFarFromEntance(){
-    mcpp::MinecraftConnection mc;
-    mc.postToChat("test mode tp");
-
-    return mc.getPlayerPosition();
-}
 
 
 /// @brief 
@@ -111,10 +92,6 @@ void MazeUtil::CreateStructureTerminal(bool en) {
 }
 
 void MazeUtil::ValidMaze() {
-    // flood fill
-    // if floodfill grid doesnt match, then uh oh
-
-    // create 2d arry matrix to fill out
     int** compArr = new int*[length];
     for(int i = 0; i < length; ++i) {
         compArr[i] = new int[width];
@@ -122,6 +99,7 @@ void MazeUtil::ValidMaze() {
     for(int i = 0; i < length; ++i) { for(int j = 0; j < width; ++j) { compArr[i][j] = 0; } }
     // fill with 0's
 
+    // finding the entrance point for the maze to start the floodfills
     int startL = 0;
     int startW = 0;
     for(int i = 0; i < length; ++i) {
@@ -165,6 +143,9 @@ void MazeUtil::ValidMaze() {
             if(MazeStructure[i][j] == '.' && compArr[i][j] == 0) {
                 std::cout << "loop detected at (" << i << "," << j << ")" << std::endl; 
                 return;
+
+                // at this point we should cut a wall next to tthe detected loop and run floodfill again
+                // over and over till we dont reach this point
             }
         }
     }
@@ -236,15 +217,8 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
     if(testmode) { direction = d; }
 
     int wall = 0;
-    if(maxh - 2 <= minh) { 
-        std::cout << "should end here btw" << std::endl;
-        return; 
-        
-    }
-    if(maxw - 2 <= minw) { 
-        std::cout << "should end here btw" << std::endl;
-        return; 
-    }
+    if(maxh - 2 <= minh) { return; }
+    if(maxw - 2 <= minw) { return; }
 
     if(direction == 0) {
         int horizontalSplit = 0;
@@ -261,7 +235,16 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
         // now we treat the horizontal split as the max for the top square and the min for the bottom square
         // and if in test mode set the direction to the opposite (dont need to check with another if statement it already checks at the start)
 
-        //direction = 1;
+        if(testmode) { 
+            for(int i = 0; i < length; ++i) {
+                    for(int j = 0; j < width; ++j) {
+                    std::cout << MazeStructure[i][j] << " ";
+                }
+                std::cout << std::endl;
+            }
+            std::cout << std::endl;
+            direction = 1; 
+        }
 
         RecursiveFill(minh, minw, horizontalSplit, maxw, direction);
         RecursiveFill(horizontalSplit, minw, maxh, maxw, direction);
@@ -277,6 +260,17 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
         do{ wall = rndHeight(rnd); }
         while (wall % 2 == 0);
         MazeStructure[wall][verticalSplit] = '.'; 
+
+        if(testmode) { 
+            for(int i = 0; i < length; ++i) {
+                    for(int j = 0; j < width; ++j) {
+                    std::cout << MazeStructure[i][j] << " ";
+                }
+                std::cout << std::endl;
+            }
+            std::cout << std::endl;
+            direction = 0; 
+        }
 
         RecursiveFill(minh, minw, maxh, verticalSplit, direction);
         RecursiveFill(minh, verticalSplit, maxh, maxw, direction);
@@ -308,7 +302,7 @@ void MazeUtil::CreateMazeEntrance() {
     } 
 }
 
-
+///
 /// Helper Section - Contains functions to get info
 ///                  about the maze and to clean it up
 

@@ -25,9 +25,6 @@ class MazeUtil {
 
         void RecursiveFill(int minh, int minw, int maxh, int maxw, int d);
 
-        mcpp::Coordinate MazeRandStartCoord();
-        mcpp::Coordinate MazeFarFromEntance();
-
         int getLength() { return length; }
         int getWidth() { return width; }
         char** GetStructure() { return MazeStructure; }
