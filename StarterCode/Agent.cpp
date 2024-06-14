@@ -1,7 +1,7 @@
 #include "Agent.h"
 
 Agent::Agent()
-{
+{   
 }
 
 
@@ -22,15 +22,12 @@ void Agent::placePlayer(mcpp::Coordinate basePoint, bool mode) {
     mc.setPlayerPosition(basePoint);
 }
 
-std::vector<mcpp::Coordinate> solveCord;
-
-
 void Agent::solveMaze() {
     mcpp::MinecraftConnection mc;
 
     mcpp::Coordinate pointLoc = mc.getPlayerPosition();
 
-    bool bCarpetFound = false; //Carpet not found
+    bCarpetFound = false; //Carpet not found
 
     while (!bCarpetFound) {
         int vectorCounter = 0; 
@@ -57,7 +54,7 @@ void Agent::printAndGuideSolve (std::vector<mcpp::Coordinate> completeVec) {
 
     for (unsigned long int i = 0; i < completeVec.size(); i++) {
         int j = i + 1;
-        std::cout << "Step[" << j << "]: (" << completeVec[i].x << ", " << completeVec[i].y << ", " << completeVec[i].z << ")"  << std::endl;
+        std::cout << "Step[" << j << "]: (" << completeVec[i].x << ", " << completeVec[i].y << ", " << completeVec[i].z << ")"  << std::endl; 
         mc.setBlock(completeVec[i], mcpp::Blocks::LIME_CARPET);
         sleep(2); //Time Delay
         mc.setBlock(completeVec[i], mcpp::Blocks::AIR);

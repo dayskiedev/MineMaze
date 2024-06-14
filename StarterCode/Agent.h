@@ -39,8 +39,11 @@ private:
     void zPlus (mcpp::Coordinate currentCor, int vecCounter);
     void xMinus (mcpp::Coordinate currentCor, int vecCounter);
     void xPlus (mcpp::Coordinate currentCor, int vecCounter);
+    
     mcpp::MinecraftConnection mc;
     mcpp::Coordinate pointLoc;
+    bool bCarpetFound;
+    std::vector<mcpp::Coordinate> solveCord;
 
 };
 
