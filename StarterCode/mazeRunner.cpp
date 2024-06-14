@@ -22,19 +22,36 @@ int main(int argc, char *argv[])
     mcpp::MinecraftConnection mc;
     bool mode = false;
     bool enhance = false; // enchance mode
-    if (argc > 1) { 
-        for(int i = 0; i < argc; ++i) {
-            if(!mode) { mode = compareCharStr(argv[i], "-testmode"); } 
-            if(!enhance) { enhance = compareCharStr(argv[i], "-enhance"); } 
+    if (argc > 1)
+    {
+        for (int i = 0; i < argc; ++i)
+        {
+            if (!mode)
+            {
+                mode = compareCharStr(argv[i], "-testmode");
+            }
+            if (!enhance)
+            {
+                enhance = compareCharStr(argv[i], "-enhance");
+            }
         } // loops through every extra argument provided to see if they match either of these
         // checks if they are false to then see if they are true, because the current input could be -enhance
         // and while testmode is already true this could otherwise set it back to false unintentionally
     }
 
-    if (!mode) { mc.postToChat("RUNNING IN NORMAL MODE"); }
-    if (mode) { mc.postToChat("RUNNING IN TEST MODE"); }
+    if (!mode)
+    {
+        mc.postToChat("RUNNING IN NORMAL MODE");
+    }
+    if (mode)
+    {
+        mc.postToChat("RUNNING IN TEST MODE");
+    }
 
-    if (enhance) { mc.postToChat("RUNNING WITH ENHANCMENTS"); }
+    if (enhance)
+    {
+        mc.postToChat("RUNNING WITH ENHANCMENTS");
+    }
 
     mc.doCommand("time set day");
 
@@ -49,7 +66,8 @@ int main(int argc, char *argv[])
     // State machine for menu
     while (curState != ST_Exit)
     {
-        if (curState == ST_Main) {
+        if (curState == ST_Main)
+        {
             do
             {
                 printMainMenu();
@@ -57,28 +75,40 @@ int main(int argc, char *argv[])
             curState = States(stateNum);
         }
 
-        if (curState == ST_CreateMaze) {
+        if (curState == ST_CreateMaze)
+        {
             do
             {
                 printGenerateMazeMenu();
             } while (!sanatiseInput(3, stateNum));
 
             // due to the input being sanatised it should only ever be 1-3 when it reaches here
-            if (stateNum == 1) { mu.CreateStructureTerminal(enhance); }
-            if (stateNum == 2) { mu.CreatureStructureRandom(mode); }
-            if (stateNum == 3) { curState = ST_Main; }
+            if (stateNum == 1)
+            {
+                mu.CreateStructureTerminal(enhance);
+            }
+            if (stateNum == 2)
+            {
+                mu.CreatureStructureRandom(mode);
+            }
+            if (stateNum == 3)
+            {
+                curState = ST_Main;
+            }
 
             curState = ST_Main;
         }
 
-        if (curState == ST_BuildMaze) {
+        if (curState == ST_BuildMaze)
+        {
             std::cout << "BUILDING MAZE..." << std::endl;
             curState = ST_Main;
 
-            Maze(mu.getBasePoint(), mu.getLength(), mu.getWidth(), mu.GetStructure(), mode);
+            Maze(mu.getBasePoint().clone(), mu.getLength(), mu.getWidth(), mu.GetStructure(), mode);
         }
 
-        if (curState == ST_SolveMaze) {
+        if (curState == ST_SolveMaze)
+        {
             do
             {
                 printSolveMazeMenu();
@@ -88,8 +118,8 @@ int main(int argc, char *argv[])
             {
                 std::cout << "Solve Manually" << std::endl;
                 // if in testmode we want to place the player furtherst from the
-                //if(mode) {  agent place player furthest from maze); }
-                //else { agent.placePlayer random pos); }
+                // if(mode) {  agent place player furthest from maze); }
+                // else { agent.placePlayer random pos); }
             }
             if (stateNum == 2)
             {
