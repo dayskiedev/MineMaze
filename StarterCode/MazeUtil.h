@@ -1,5 +1,7 @@
 #include <iostream>
 #include <mcpp/mcpp.h>
+#include <cstdlib>
+#include <ctime>
 
 // maze will be stored in a 2d array
 // x.x 
@@ -11,6 +13,9 @@
 class MazeUtil {
     public:
         ~MazeUtil(); // place to dealocate memory
+
+        mcpp::Coordinate randStartCord(mcpp::Coordinate basePoint, int length, int width);
+        mcpp::Coordinate furtherstFromEntrance(mcpp::Coordinate basePoint, int length, int width);
 
         void CreateStructure();
         void CreateStructureTerminal(bool enhancment);

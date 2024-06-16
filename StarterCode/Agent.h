@@ -29,11 +29,11 @@ class Agent
 public:
     Agent();
     ~Agent();
-    void placePlayer(mcpp::Coordinate basePoint);
+    void placePlayer(mcpp::Coordinate placePoint);
     void solveMaze();
 
 private:
-    /* data */  
+    /* data */ 
     void printAndGuideSolve (std::vector<mcpp::Coordinate> completeVec);
     void zMinus (mcpp::Coordinate currentCor, int vecCounter);
     void zPlus (mcpp::Coordinate currentCor, int vecCounter);

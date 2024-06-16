@@ -9,10 +9,10 @@ Agent::~Agent()
 {
 }
 
-void Agent::placePlayer(mcpp::Coordinate basePoint) {
+void Agent::placePlayer(mcpp::Coordinate placePoint) {
     mcpp::MinecraftConnection mc;
 
-    mc.setPlayerPosition(basePoint);
+    mc.setPlayerPosition(placePoint);
 }
 
 void Agent::solveMaze() {
@@ -39,7 +39,8 @@ void Agent::solveMaze() {
         bCarpetFound = true;
     }
     printAndGuideSolve(solveCord); //Print solveCord vector - the solution to the maze
-    solveCord.clear();
+    mc.setBlock(solveCord[solveCord.size() - 1], mcpp::Blocks::BLUE_CARPET);
+    solveCord.clear(); //Clear the vector
 }
 
 void Agent::printAndGuideSolve (std::vector<mcpp::Coordinate> completeVec) { // Print all coordinate in the vector which leads to the blue carpet
@@ -53,7 +54,6 @@ void Agent::printAndGuideSolve (std::vector<mcpp::Coordinate> completeVec) { // 
         mc.setBlock(completeVec[i], mcpp::Blocks::AIR);
     }
 }
-   
 
     /*
     The 4 functions zPlus, zMinus, xPlus and xMinus are done so to mimic a first-person pov right hand solve rule
@@ -64,13 +64,13 @@ void Agent::printAndGuideSolve (std::vector<mcpp::Coordinate> completeVec) { // 
 void Agent::zPlus(mcpp::Coordinate currentCor, int vecCounter) { 
     mcpp::MinecraftConnection mc;
 
-    currentCor = currentCor + MOVE_ZPLUS;
-    solveCord.push_back(currentCor);
-    vecCounter++;
+    currentCor = currentCor + MOVE_ZPLUS; //After zPlus function is called, the currentCoordinates are incremented by moveZplus
+    solveCord.push_back(currentCor); //Current Coord is placed at the end of the vector.
+    vecCounter++; //The counter for vec is incremented by one, this is to keep track of the "steps" in the solve
     
-    if (mc.getBlock(currentCor + MOVE_ZPLUS) == mcpp::Blocks::BLUE_CARPET) {
-        currentCor = currentCor + MOVE_ZPLUS;
-        solveCord.push_back(currentCor); 
+    if (mc.getBlock(currentCor + MOVE_ZPLUS) == mcpp::Blocks::BLUE_CARPET) { //If it is a blueCarpet, function will return to the main
+        currentCor = currentCor + MOVE_ZPLUS; //Current Coord in now Current Coord + Direction
+        solveCord.push_back(currentCor);  //Coord is stored in vector
     }
     else if (mc.getBlock(currentCor + MOVE_XMINUS) == mcpp::Blocks::AIR) {
         xMinus(currentCor, vecCounter);
