@@ -66,34 +66,23 @@ int main(int argc, char *argv[])
     // State machine for menu
     while (curState != ST_Exit)
     {
-<<<<<<< HEAD
         if (curState == ST_Main)
         {
             do
             {
-=======
-        if (curState == ST_Main) {
-            do {
->>>>>>> 304651b (testmode for random maze generation done. still working on enhancement 1)
                 printMainMenu();
             } while (!sanatiseInput(5, stateNum));
             curState = States(stateNum);
         }
 
-<<<<<<< HEAD
         if (curState == ST_CreateMaze)
         {
             do
             {
-=======
-        if (curState == ST_CreateMaze) {
-            do {
->>>>>>> 304651b (testmode for random maze generation done. still working on enhancement 1)
                 printGenerateMazeMenu();
             } while (!sanatiseInput(3, stateNum));
 
             // due to the input being sanatised it should only ever be 1-3 when it reaches here
-<<<<<<< HEAD
             if (stateNum == 1)
             {
                 mu.CreateStructureTerminal(enhance);
@@ -106,10 +95,6 @@ int main(int argc, char *argv[])
             {
                 curState = ST_Main;
             }
-=======
-            if (stateNum == 1) { mu.CreateStructureTerminal(enhance); }
-            if (stateNum == 2) { mu.CreatureStructureRandom(mode); }
->>>>>>> 304651b (testmode for random maze generation done. still working on enhancement 1)
 
             curState = ST_Main; // third option already takes us here so no nude for a third if statement
         }
@@ -122,15 +107,10 @@ int main(int argc, char *argv[])
             Maze(mu.getBasePoint().clone(), mu.getLength(), mu.getWidth(), mu.GetStructure(), mode);
         }
 
-<<<<<<< HEAD
         if (curState == ST_SolveMaze)
         {
             do
             {
-=======
-        if (curState == ST_SolveMaze) {
-            do {
->>>>>>> 304651b (testmode for random maze generation done. still working on enhancement 1)
                 printSolveMazeMenu();
             } while (!sanatiseInput(3, stateNum));
 
