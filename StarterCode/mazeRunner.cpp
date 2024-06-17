@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
             }
         } // loops through every extra argument provided to see if they match either of these
         // checks if they are false to then see if they are true, because the current input could be -enhance
-        // and while testmode is already true this could otherwise set it back to false unintentionally
+        //z and while testmode is already true this could otherwise set it back to false unintentionally
     }
 
     if (!mode)
@@ -66,23 +66,34 @@ int main(int argc, char *argv[])
     // State machine for menu
     while (curState != ST_Exit)
     {
+<<<<<<< HEAD
         if (curState == ST_Main)
         {
             do
             {
+=======
+        if (curState == ST_Main) {
+            do {
+>>>>>>> 304651b (testmode for random maze generation done. still working on enhancement 1)
                 printMainMenu();
             } while (!sanatiseInput(5, stateNum));
             curState = States(stateNum);
         }
 
+<<<<<<< HEAD
         if (curState == ST_CreateMaze)
         {
             do
             {
+=======
+        if (curState == ST_CreateMaze) {
+            do {
+>>>>>>> 304651b (testmode for random maze generation done. still working on enhancement 1)
                 printGenerateMazeMenu();
             } while (!sanatiseInput(3, stateNum));
 
             // due to the input being sanatised it should only ever be 1-3 when it reaches here
+<<<<<<< HEAD
             if (stateNum == 1)
             {
                 mu.CreateStructureTerminal(enhance);
@@ -95,8 +106,12 @@ int main(int argc, char *argv[])
             {
                 curState = ST_Main;
             }
+=======
+            if (stateNum == 1) { mu.CreateStructureTerminal(enhance); }
+            if (stateNum == 2) { mu.CreatureStructureRandom(mode); }
+>>>>>>> 304651b (testmode for random maze generation done. still working on enhancement 1)
 
-            curState = ST_Main;
+            curState = ST_Main; // third option already takes us here so no nude for a third if statement
         }
 
         if (curState == ST_BuildMaze)
@@ -107,10 +122,15 @@ int main(int argc, char *argv[])
             Maze(mu.getBasePoint().clone(), mu.getLength(), mu.getWidth(), mu.GetStructure(), mode);
         }
 
+<<<<<<< HEAD
         if (curState == ST_SolveMaze)
         {
             do
             {
+=======
+        if (curState == ST_SolveMaze) {
+            do {
+>>>>>>> 304651b (testmode for random maze generation done. still working on enhancement 1)
                 printSolveMazeMenu();
             } while (!sanatiseInput(3, stateNum));
 
@@ -129,10 +149,6 @@ int main(int argc, char *argv[])
             {
                 std::cout << "Show escape route" << std::endl;
                 agent.solveMaze();
-            }
-            if (stateNum == 3)
-            {
-                curState = ST_Main;
             }
 
             curState = ST_Main;
