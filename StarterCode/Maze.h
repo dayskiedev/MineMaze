@@ -4,6 +4,8 @@
 #include <mcpp/mcpp.h>
 #include <chrono>
 #include <thread>
+#include <iostream>
+#include <string>
 
 class CoordNode
 {
@@ -37,6 +39,10 @@ public:
     void restore();
 
     ~Maze();
+
+    void print(mcpp::Coordinate &coord);
+    void print(mcpp::BlockType &block);
+    void print(std::string &out);
 
 private:
     mcpp::MinecraftConnection mc;
