@@ -46,53 +46,105 @@ mcpp::Coordinate Agent::furtherstFromEntrance(mcpp::Coordinate basePoint, int le
     mcpp::Coordinate tempValue;
     mc.postToChat("test mode tp");
 
-    int l = 0;
-    int w = -1;
-    int lCounter = 0;
-    // int wCounter = 0;
-    // int loopCounter = 0;
+    int l = 1;
+    int w = 0;
 
     farFromEntrance = basePoint;
 
     tempValue = farFromEntrance;
 
-    tempValue.z++;
     tempValue.x++;
+    tempValue.z++;
+
 
     while (!(mc.getBlock(tempValue) == mcpp::Blocks::AIR)) {
-        if (w == -1) {
+        if (w == 0) {
             tempValue.x++;
             l++;
-            if (l == 8) {
+            if (l == length) {
                 w++;
             }
         }
-        else if (l == (length - 1)) {
+        else if (l == length) {
             tempValue.z++;
             w++;
-            if (w == (width - 1)) {
-                l = 1;
+            if (w == width) {
+                l--;
             }
         }
-        else if (w == (width - 1)) {
+        else if (w == width) {
             tempValue.x--;;
-            lCounter++;
+            l--;
+            if (l == 0) {
+                w--;
+            }
         }
-        else if (lCounter == (length - 1)) {
+        else if (l == 0) {
             tempValue.z--; 
         }
     }
 
-    // mcpp::Coordinate entrance = tempValue;
-    // bool notFound = true;
-    // lCounter = 0;
-    // wCounter = 0;
+std::cout << tempValue << std::endl;
 
-    //entrance found, but how do i locate where in the maze i am and now do i find the hypotonus 
+    int identifier = 0;
+
+    if (tempValue.x == (basePoint.x + 1)) { //right
+        identifier = tempValue.z - basePoint.z;
+std::cout << identifier << std::endl;
+        if (identifier <= width / 2) {
+            tempValue.x = basePoint.x + (length - 1);
+            tempValue.z = basePoint.z + (width - 1);
+        }
+        else if (identifier > width / 2) {
+            tempValue.x = basePoint.x + (length - 1);
+            tempValue.z = basePoint.z + 2;
+
+        }
+std::cout << 1 << std::endl;
+    }
+    else if (tempValue.z == (basePoint.z + 1)) { //bottom
+        identifier = tempValue.x - basePoint.x;
+std::cout << identifier << std::endl;
+        if (identifier <= length / 2) {
+            tempValue.x = basePoint.x + (length - 1);
+            tempValue.z = basePoint.z + (width - 1);
+        }
+        else if (identifier > length / 2) {
+            tempValue.x = basePoint.x + 2;
+            tempValue.z = basePoint.z + (width - 1); 
+        }
+std::cout << 2 << std::endl;
+    }
+    else if (tempValue.x == (basePoint.x + 9)) { //left
+        identifier = tempValue.z - basePoint.z;
+std::cout << identifier << std::endl;
+        if (identifier <= width / 2) {
+            tempValue.x = basePoint.x + 2;
+            tempValue.z = basePoint.z + (width - 1); 
+        }
+        else if (identifier > width / 2) {
+            tempValue.x = basePoint.x + 2;
+            tempValue.z = basePoint.z + 2;
+        }
+std::cout << 3 << std::endl;
+    }
+    else if (tempValue.z == (basePoint.z + 9)) { //top
+        identifier = tempValue.x - basePoint.x;
+std::cout << identifier << std::endl;
+        if (identifier <= length / 2) {
+            tempValue.x = basePoint.x + (length - 1);
+            tempValue.z = basePoint.z + 2;      
+        }
+        else if (identifier > length / 2) {
+            tempValue.x = basePoint.x + 2;
+            tempValue.z = basePoint.z + 2;
+        }
+std::cout << 4 << std::endl;
+    }
 
     farFromEntrance = tempValue;
 
-    std::cout << farFromEntrance << std::endl;
+std::cout << farFromEntrance << std::endl;
 
     return farFromEntrance;
 }
