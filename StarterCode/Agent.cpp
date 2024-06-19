@@ -1,6 +1,6 @@
 #include "Agent.h"
 
-Agent()
+Agent::Agent()
 {   
 }
 
@@ -42,38 +42,57 @@ mcpp::Coordinate Agent::randStartCord(mcpp::Coordinate basePoint, int length, in
 mcpp::Coordinate Agent::furtherstFromEntrance(mcpp::Coordinate basePoint, int length, int width) {
     mcpp::MinecraftConnection mc;
 
-
     mcpp::Coordinate farFromEntrance;
     mcpp::Coordinate tempValue;
     mc.postToChat("test mode tp");
 
-    int l = 1;
-    int w = 1;
+    int l = 0;
+    int w = -1;
+    int lCounter = 0;
+    // int wCounter = 0;
+    // int loopCounter = 0;
 
     farFromEntrance = basePoint;
 
-    farFromEntrance.x = basePoint.x + length;
-    farFromEntrance.z = basePoint.z + width;
-
     tempValue = farFromEntrance;
 
+    tempValue.z++;
+    tempValue.x++;
+
     while (!(mc.getBlock(tempValue) == mcpp::Blocks::AIR)) {
-        if (w > 1) {
-            tempValue.z = farFromEntrance.z + w;
-            w++;
-        }
-        
-        tempValue.x = farFromEntrance.x - l;
-
-        if (!(mc.getBlock(tempValue) == mcpp::Blocks::AIR)) {
-            tempValue.x = farFromEntrance.x + l;
+        if (w == -1) {
+            tempValue.x++;
             l++;
-
-            tempValue.z = farFromEntrance.z - w;
+            if (l == 8) {
+                w++;
+            }
+        }
+        else if (l == (length - 1)) {
+            tempValue.z++;
+            w++;
+            if (w == (width - 1)) {
+                l = 1;
+            }
+        }
+        else if (w == (width - 1)) {
+            tempValue.x--;;
+            lCounter++;
+        }
+        else if (lCounter == (length - 1)) {
+            tempValue.z--; 
         }
     }
 
+    // mcpp::Coordinate entrance = tempValue;
+    // bool notFound = true;
+    // lCounter = 0;
+    // wCounter = 0;
+
+    //entrance found, but how do i locate where in the maze i am and now do i find the hypotonus 
+
     farFromEntrance = tempValue;
+
+    std::cout << farFromEntrance << std::endl;
 
     return farFromEntrance;
 }
