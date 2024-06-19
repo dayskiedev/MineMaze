@@ -5,6 +5,14 @@
 
 // describe class/what it does
 
+// TODO: 
+// make sure test mode walls generate at centre
+// fix validate mazw
+
+MazeUtil::MazeUtil(bool mode, bool enhance) {
+     testmode = mode;
+     enhancemode = enhance;
+}
 
 mcpp::Coordinate MazeUtil::randStartCord(mcpp::Coordinate basePoint, int length, int width) {
     mcpp::MinecraftConnection mc;
@@ -136,7 +144,7 @@ void MazeUtil::CreateStructure() {
 ///                     as well as validating / fixing this maze if it contains loops
 ///
 
-void MazeUtil::CreateStructureTerminal(bool en) {
+void MazeUtil::CreateStructureTerminal() {
     CreateStructure();
 
     std::cout << "Enter the maze structure (" << length << "x" << width << "): " << std::endl;
@@ -149,7 +157,10 @@ void MazeUtil::CreateStructureTerminal(bool en) {
         }
     }
 
-    ValidMaze();
+    if(enhancemode) {
+        std::cout << "running in enhanced mode" << std::endl;
+        ValidMaze();
+    }
 
     std::cout << "Maze read successfully!" << std::endl;
     PrintMazeInfo();
@@ -233,6 +244,7 @@ void MazeUtil::FloodFill(int** compArr, int sl, int sw) {
     || MazeStructure[sl][sw] != '.' || compArr[sl][sw] == 1) { return; }
     // if current spot is not a dot we go back
     // but we also need to make sure the spot isnt filled already
+    // this video helped with flood fill https://youtu.be/aehEcTEPtCs?si=4c3jc9xTELWiEXmG
 
     compArr[sl][sw] = 1;
     // move onto 4 other directions
@@ -247,7 +259,7 @@ void MazeUtil::FloodFill(int** compArr, int sl, int sw) {
 ///                              structure as well as a valid but random entry point
 ///
 
-void MazeUtil::CreatureStructureRandom(bool mode) {
+void MazeUtil::CreatureStructureRandom() {
     CreateStructure();
     // creates the x outline for maze and fills with .'s
     for(int i = 0; i < width; ++i) { 
@@ -261,7 +273,9 @@ void MazeUtil::CreatureStructureRandom(bool mode) {
             MazeStructure[i][j] = '.';
         }
     }
-    testmode = mode;
+    if(testmode) {
+        std::cout << "creating in testmode.." << std::endl;
+    }
 
     RecursiveFill(0,0, length-1, width - 1, 1);
     // place entrance
@@ -294,17 +308,6 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
 
     int wall = 0;
 
-    std::cout << "min width " << minw << " max width " << maxw << std::endl;
-    std::cout << "min height " << minh << " max height " << maxh << std::endl;
-
-    for(int i = 0; i < length; ++i) {
-    for(int j = 0; j < width; ++j) {
-            std::cout << MazeStructure[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
-    std::cout << std::endl;
-
     if(maxh - 2 <= minh) { return; }
     if(maxw - 2 <= minw) { return; }
 
@@ -319,10 +322,8 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
         while ( wall % 2 == 0);
         MazeStructure[horizontalSplit][wall] = '.';
 
-
         // now we treat the horizontal split as the max for the top square and the min for the bottom square
         // and if in test mode set the direction to the opposite (dont need to check with another if statement it already checks at the start)
-
 
         RecursiveFill(minh, minw, horizontalSplit, maxw, direction);
         RecursiveFill(horizontalSplit, minw, maxh, maxw, direction);

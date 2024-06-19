@@ -12,14 +12,15 @@
 
 class MazeUtil {
     public:
+        MazeUtil(bool mode, bool enhance);
         ~MazeUtil(); // place to dealocate memory
 
         mcpp::Coordinate randStartCord(mcpp::Coordinate basePoint, int length, int width);
         mcpp::Coordinate furtherstFromEntrance(mcpp::Coordinate basePoint, int length, int width);
 
         void CreateStructure();
-        void CreateStructureTerminal(bool enhancment);
-        void CreatureStructureRandom(bool mode);
+        void CreateStructureTerminal();
+        void CreatureStructureRandom();
         void CreateMazeEntrance();
 
         void PrintMazeInfo();
@@ -41,4 +42,5 @@ class MazeUtil {
         char** MazeStructure = nullptr; // 2d array of chars
         mcpp::Coordinate basePoint;
         bool testmode = false;
+        bool enhancemode = false;
 };
