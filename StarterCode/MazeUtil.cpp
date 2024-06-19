@@ -223,23 +223,22 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
     std::uniform_int_distribution<int> rndWidth(minw + 1, maxw - 1);
     std::uniform_int_distribution<int> rndHeight(minh + 1, maxh -1);
 
+    if(maxh - 2 <= minh) { return; }
+    if(maxw - 2 <= minw) { return; }
+
     if(!testmode) { 
         direction = dir(rnd); 
     }
     // if not in test mode direction will be random, if in test mode direction depends on previous direction
     if(testmode) { // really cursed testmode direction check
-        direction = d; 
-        if(direction == 0) { 
-            direction = 1;
-        } else {
-            direction = 0;
-        }
+        direction = d;
+        direction = 1 - direction;
     }
 
     int wall = 0;
 
-    if(maxh - 2 <= minh) { return; }
-    if(maxw - 2 <= minw) { return; }
+
+    std::cout << "current direction: " << direction << std::endl;
 
     if(direction == 0) {
         int horizontalSplit = 0;
@@ -299,25 +298,33 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
 }
 
 void MazeUtil::CreateMazeEntrance() {
-    int dir = rand() % 4; // 0 = up 1 = left 2 = right 3 = down
+    std::random_device rnd;
+    std::uniform_int_distribution<int> dir(0,3);
+    std::uniform_int_distribution<int> rndWidth(0, width - 1);
+    std::uniform_int_distribution<int> rndHeight(0, length - 1);
+    //int dir = rand() % 4; // 0 = up 1 = left 2 = right 3 = down
+
+    int direction = dir(rnd);
     int pos;
-    if(dir == 0) {
-        do{pos = rand() % width; }
+
+    std::cout << "entrance direction: " << direction << std::endl;
+    if(direction == 0) {
+        do{pos = rndWidth(rnd); }
         while (MazeStructure[1][pos] == 'x');
         MazeStructure[0][pos] = '.';
     }
-    if(dir == 1) {
-        do{pos = rand() % length; }
+    if(direction == 1) {
+        do{pos = rndHeight(rnd); }
         while (MazeStructure[pos][1] == 'x');
         MazeStructure[pos][0] = '.';
     }
-    if(dir == 2) {
-        do{pos = rand() % length; }
+    if(direction == 2) {
+        do{pos = rndHeight(rnd); }
         while(MazeStructure[pos][width - 2] == 'x');
         MazeStructure[pos][width - 1] = '.';
     }
-    if(dir == 3) {
-        do{pos = rand() % width; }
+    if(direction == 3) {
+        do{pos = rndWidth(rnd); }
         while(MazeStructure[length - 2][pos] == 'x');
         MazeStructure[length - 1][pos] = '.';
     } 
