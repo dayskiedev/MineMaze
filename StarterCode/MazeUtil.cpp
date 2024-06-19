@@ -78,6 +78,8 @@ void MazeUtil::CreateStructure() {
 void MazeUtil::CreateStructureTerminal() {
     CreateStructure();
 
+    // kind of a scuffed way to do this but we need to teleport the player to a certain coordinate if in testmode for the terminal
+
     std::cout << "Enter the maze structure (" << length << "x" << width << "): " << std::endl;
     // read in input from terminal
     char c;
@@ -146,10 +148,7 @@ void MazeUtil::ValidMaze() {
     for(int i = 0; i < length; ++i) {
             for(int j = 0; j < width; ++j) {
                 if(MazeStructure[i][j] == '.' && compArr[i][j] == 0) {
-                    std::cout << "isolation detected at (" << i << "." << j << ")" << std::endl;      
-
-                    // here we need to solve the issue
-
+                    std::cout << "isolation/loop detected at (" << i << "." << j << ")" << std::endl;      
                 }
             }
         }
@@ -249,9 +248,24 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
         for(int i = minw; i < maxw; ++i) { MazeStructure[horizontalSplit][i] = 'x'; }
 
         //generate hole
-        do{ wall = rndWidth(rnd); }
-        while ( wall % 2 == 0);
-        MazeStructure[horizontalSplit][wall] = '.';
+        if(!testmode) { // pick random spot
+            do{ wall = rndWidth(rnd); }
+            while ( wall % 2 == 0);
+            MazeStructure[horizontalSplit][wall] = '.';
+
+        } else{
+            // needs to be wall closest to centre 
+            // if there are less than 2 options go random
+            // for example [1 - 5]
+            // could be 1 3 or 5
+            // 3 is centre so we want that
+            
+            // floor of (min + maxw / 2) gives a value close to the centre of the wall
+            wall = std::floor( (minw + maxw ) / 2);
+            if(wall % 2 == 0) { wall += 1;} // could change to be random but atm its right biased
+            std::cout << "middle position of horiontal wall is: " << wall << std::endl;
+            MazeStructure[horizontalSplit][wall] = '.';
+        }
 
         // now we treat the horizontal split as the max for the top square and the min for the bottom square
         // and if in test mode set the direction to the opposite (dont need to check with another if statement it already checks at the start)
@@ -267,9 +281,17 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
         for(int i = minh; i < maxh; ++i) { MazeStructure[i][verticalSplit] = 'x'; }
 
         // generating hole
-        do{ wall = rndHeight(rnd); }
-        while (wall % 2 == 0);
-        MazeStructure[wall][verticalSplit] = '.'; 
+        if(!testmode) {
+            do{ wall = rndHeight(rnd); }
+            while (wall % 2 == 0);
+            MazeStructure[wall][verticalSplit] = '.'; 
+        }
+        else {
+            wall = std::floor( (minh + maxh ) / 2);
+            if(wall % 2 == 0) { wall += 1; }
+            std::cout << "middle position of vertical wall is: " << wall << std::endl;
+            MazeStructure[wall][verticalSplit] = '.'; 
+        }
 
         RecursiveFill(minh, minw, maxh, verticalSplit, direction);
         RecursiveFill(minh, verticalSplit, maxh, maxw, direction);

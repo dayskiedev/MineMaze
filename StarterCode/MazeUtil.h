@@ -14,7 +14,7 @@ class MazeUtil {
     public:
         MazeUtil(bool mode, bool enhance);
         ~MazeUtil(); // place to dealocate memory
-        
+
         void CreateStructure();
         void CreateStructureTerminal();
         void CreatureStructureRandom();
