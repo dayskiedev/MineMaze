@@ -228,22 +228,31 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
 
     if(!testmode) { 
         direction = dir(rnd); 
-    }
-    // if not in test mode direction will be random, if in test mode direction depends on previous direction
-    if(testmode) { // really cursed testmode direction check
+    } else { 
         direction = d;
         direction = 1 - direction;
     }
 
     int wall = 0;
 
-
-    std::cout << "current direction: " << direction << std::endl;
-
     if(direction == 0) {
         int horizontalSplit = 0;
-        do{ horizontalSplit = rndHeight(rnd); }
-        while(horizontalSplit % 2); // repeat until even number
+
+
+        // IF we're not in test mode we want to pick a random even number 
+        // between the min height and the max height to split the maze
+        // using min and max means we cut every possible spot we can until we can no longer cut
+        if(!testmode) {
+            do{ horizontalSplit = rndHeight(rnd); }
+            while(horizontalSplit % 2 != 0); // repeat until even number
+        } else {
+            horizontalSplit = std::floor( (minh + maxh) / 2 );
+            if(horizontalSplit % 2 != 0) { horizontalSplit+= 1; }
+        }
+        // when in test mode we want the splits to be as centred as possible
+        // this is achieved by adding the min and max ex 0 and 6 divding by 2 and taking the 
+        // closest even number (using index count) to place a wall
+
         for(int i = minw; i < maxw; ++i) { MazeStructure[horizontalSplit][i] = 'x'; }
 
         //generate hole
@@ -253,12 +262,6 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
             MazeStructure[horizontalSplit][wall] = '.';
 
         } else{
-            // needs to be wall closest to centre 
-            // if there are less than 2 options go random
-            // for example [1 - 5]
-            // could be 1 3 or 5
-            // 3 is centre so we want that
-            
             // floor of (min + maxw / 2) gives a value close to the centre of the wall
             wall = std::floor( (minw + maxw ) / 2);
             if(wall % 2 == 0) { wall += 1;} // could change to be random but atm its right biased
@@ -268,14 +271,19 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
 
         // now we treat the horizontal split as the max for the top square and the min for the bottom square
         // and if in test mode set the direction to the opposite (dont need to check with another if statement it already checks at the start)
-
         RecursiveFill(minh, minw, horizontalSplit, maxw, direction);
         RecursiveFill(horizontalSplit, minw, maxh, maxw, direction);
     }
     if(direction == 1) {
         int verticalSplit = 0;
-        do { verticalSplit = rndWidth(rnd); }
-        while(verticalSplit % 2 != 0);
+
+        if(!testmode) {
+            do { verticalSplit = rndWidth(rnd); }
+            while(verticalSplit % 2 != 0);
+        } else {
+            verticalSplit = std::floor( (minw + maxw) / 2 );
+            if(verticalSplit % 2 != 0) { verticalSplit+= 1; }
+        }
         // genertaing vertical line
         for(int i = minh; i < maxh; ++i) { MazeStructure[i][verticalSplit] = 'x'; }
 
