@@ -25,6 +25,7 @@ class MazeUtil {
         // enhancment
         void ValidMaze();
         void FloodFill(int** compArr, int sl, int sw);
+        void CheckFloodFill(int** arr, int sl, int sw);
 
         void RecursiveFill(int minh, int minw, int maxh, int maxw, int d);
 

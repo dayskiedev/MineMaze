@@ -91,14 +91,56 @@ void MazeUtil::CreateStructureTerminal() {
     }
 
     if(enhancemode) {
-        std::cout << "running in enhanced mode" << std::endl;
         ValidMaze();
     }
 
     std::cout << "Maze read successfully!" << std::endl;
     PrintMazeInfo();
 }
+void MazeUtil::CheckFloodFill(int** arr, int sl, int sw) {
+    FloodFill(arr, sl, sw);
 
+    for(int i = 0; i < length; ++i) {
+        for(int j = 0; j < width; ++j) {
+            std::cout << arr[i][j] << " ";
+        }
+        std::cout <<std::endl;
+    }
+
+    for(int i = 0; i < length; ++i) {
+        for(int j = 0; j < width; ++j) {
+            std::cout << MazeStructure[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+    
+    for(int i = 0; i < length; ++i) {
+        for(int j = 0; j < width; ++j) {
+            if(MazeStructure[i][j] == '.' && arr[i][j] == 0) {
+                std::cout << "isolation/loop detected at (" << i << "." << j << ")" << std::endl;   
+                 if(i - 1 != 0 && MazeStructure[i - 1][j] == 'x') { // up
+                    MazeStructure[i - 1][j] = '.';
+                    CheckFloodFill(arr, i-1, j);
+                }  
+
+                if(i + 1 != length -1 && MazeStructure[i + 1][j] == 'x') { // down
+                    MazeStructure[i + 1][j] = '.';
+                    CheckFloodFill(arr, i+1, j);
+                }  
+                if(j -1 != 0 && MazeStructure[i][j-1] == 'x') { //left
+                    MazeStructure[i][j-1] = '.';
+                    CheckFloodFill(arr, i, j-1);
+                } 
+                if(j+ 1 != width -1 && MazeStructure[i][j+1] == 'x') { // right
+                    MazeStructure[i][j+1] = '.';
+                    CheckFloodFill(arr, i, j+1);
+                }
+            }
+        }
+    }
+    std::cout << "no loops detected." << std::endl;
+    return;
+}
 
 void MazeUtil::ValidMaze() {
     int** compArr = new int*[length];
@@ -136,24 +178,7 @@ void MazeUtil::ValidMaze() {
         }
     }
 
-    FloodFill(compArr, startL, startW);
-
-    for(int i = 0; i < length; ++i) {
-        for(int j = 0; j < width; ++j) {
-            std::cout << compArr[i][j] << " ";
-        }
-        std::cout <<std::endl;
-    }
-
-    for(int i = 0; i < length; ++i) {
-            for(int j = 0; j < width; ++j) {
-                if(MazeStructure[i][j] == '.' && compArr[i][j] == 0) {
-                    std::cout << "isolation/loop detected at (" << i << "." << j << ")" << std::endl;      
-                }
-            }
-        }
-    
-    //std::cout << "no loops detected." << std::endl;
+    CheckFloodFill(compArr, startL, startW);
 
     for(int x = 0; x < length; ++x) {
         delete[] compArr[x];
