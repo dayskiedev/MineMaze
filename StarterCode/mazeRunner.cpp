@@ -88,10 +88,10 @@ int main(int argc, char *argv[])
             {
                 // if in testmode we want to place the player furtherst from the
                 if (mode) {  
-                    agent.placePlayer(mu.furtherstFromEntrance(mu.getBasePoint(), mu.getLength(), mu.getWidth()));
+                    agent.placePlayer(agent.furtherstFromEntrance(mu.getBasePoint(), mu.getLength(), mu.getWidth()));
                 }
                 else { 
-                    agent.placePlayer(mu.randStartCord(mu.getBasePoint(), mu.getLength(), mu.getWidth())); 
+                    agent.placePlayer(agent.randStartCord(mu.getBasePoint(), mu.getLength(), mu.getWidth())); 
                 }
             }
             if (stateNum == 2) { agent.solveMaze();

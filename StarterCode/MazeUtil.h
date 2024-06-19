@@ -14,10 +14,7 @@ class MazeUtil {
     public:
         MazeUtil(bool mode, bool enhance);
         ~MazeUtil(); // place to dealocate memory
-
-        mcpp::Coordinate randStartCord(mcpp::Coordinate basePoint, int length, int width);
-        mcpp::Coordinate furtherstFromEntrance(mcpp::Coordinate basePoint, int length, int width);
-
+        
         void CreateStructure();
         void CreateStructureTerminal();
         void CreatureStructureRandom();

@@ -29,8 +29,13 @@ class Agent
 public:
     Agent();
     ~Agent();
+
+    mcpp::Coordinate randStartCord(mcpp::Coordinate basePoint, int length, int width);
+    mcpp::Coordinate furtherstFromEntrance(mcpp::Coordinate basePoint, int length, int width);
+
     void placePlayer(mcpp::Coordinate placePoint);
     void solveMaze();
+
 
 private:
     /* data */ 
@@ -39,7 +44,7 @@ private:
     void zPlus (mcpp::Coordinate currentCor, int vecCounter);
     void xMinus (mcpp::Coordinate currentCor, int vecCounter);
     void xPlus (mcpp::Coordinate currentCor, int vecCounter);
-    
+
     mcpp::MinecraftConnection mc;
     mcpp::Coordinate pointLoc;
     bool bCarpetFound;

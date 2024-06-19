@@ -1,6 +1,6 @@
 #include "Agent.h"
 
-Agent::Agent()
+Agent()
 {   
 }
 
@@ -8,6 +8,76 @@ Agent::Agent()
 Agent::~Agent()
 {
 }
+
+mcpp::Coordinate Agent::randStartCord(mcpp::Coordinate basePoint, int length, int width) {
+    mcpp::MinecraftConnection mc;
+
+    mcpp::Coordinate randomPoint;
+    mcpp::Coordinate tempPoint;
+
+    tempPoint = basePoint;
+
+    int randomLen = rand() % (length - 1) + 1;
+    int randomWid = rand() % (width - 1) + 1;
+
+    tempPoint.x = tempPoint.x + randomLen; 
+    tempPoint.z = tempPoint.z + randomWid;
+    
+    while (!(mc.getBlock(tempPoint) == mcpp::Blocks::AIR)) { //Still Teleporting inside of block
+        tempPoint.x = tempPoint.x - randomLen; 
+        tempPoint.z = tempPoint.z - randomWid;
+
+        randomLen = rand() % (length - 1) + 1;
+        randomWid = rand() % (width - 1) + 1;
+
+        tempPoint.x = tempPoint.x + randomLen; 
+        tempPoint.z = tempPoint.z + randomWid;
+    }
+
+    randomPoint = tempPoint;
+
+    return randomPoint;
+}
+
+mcpp::Coordinate Agent::furtherstFromEntrance(mcpp::Coordinate basePoint, int length, int width) {
+    mcpp::MinecraftConnection mc;
+
+
+    mcpp::Coordinate farFromEntrance;
+    mcpp::Coordinate tempValue;
+    mc.postToChat("test mode tp");
+
+    int l = 1;
+    int w = 1;
+
+    farFromEntrance = basePoint;
+
+    farFromEntrance.x = basePoint.x + length;
+    farFromEntrance.z = basePoint.z + width;
+
+    tempValue = farFromEntrance;
+
+    while (!(mc.getBlock(tempValue) == mcpp::Blocks::AIR)) {
+        if (w > 1) {
+            tempValue.z = farFromEntrance.z + w;
+            w++;
+        }
+        
+        tempValue.x = farFromEntrance.x - l;
+
+        if (!(mc.getBlock(tempValue) == mcpp::Blocks::AIR)) {
+            tempValue.x = farFromEntrance.x + l;
+            l++;
+
+            tempValue.z = farFromEntrance.z - w;
+        }
+    }
+
+    farFromEntrance = tempValue;
+
+    return farFromEntrance;
+}
+
 
 void Agent::placePlayer(mcpp::Coordinate placePoint) {
     mcpp::MinecraftConnection mc;
