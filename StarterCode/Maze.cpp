@@ -28,7 +28,7 @@ Maze::Maze(mcpp::Coordinate basePoint, int xlen,
     this->headCoord = nullptr;
 
     flattenTerrain();
-    buildMaze();
+    //buildMaze();
 }
 
 CoordNode::CoordNode(mcpp::Coordinate coord)
@@ -73,15 +73,31 @@ void Maze::flattenTerrain()
     print(cornerFromBase);
     std::cout << "\n";
 
+    for (size_t i = 0; i < mc.getHeights(basePoint, cornerFromBase).size(); ++i)
+    {
+        for (size_t j = 0; j < mc.getHeights(basePoint, cornerFromBase)[i].size(); ++j)
+        {
+            std::cout << mc.getHeights(basePoint, cornerFromBase)[i][j] << " ";
+        }
+        std::cout << "\n";
+    }
+    std::cout << "\n";
+    std::cout << "\n";
+
     // std::vector<mcpp::Coordinate> tempCoords;
     // std::vector<mcpp::BlockType> tempBlocks;
 
-    int axisIndex_z = 0;
+    int axisIndex_x = 0;
     for (size_t i = 0; i < mc.getHeights(basePoint, cornerFromBase).size(); ++i)
     {
-        int axisIndex_x = 0;
+        int axisIndex_z = 0;
         for (size_t j = 0; j < mc.getHeights(basePoint, cornerFromBase)[i].size(); ++j)
         {
+
+            std::cout << "Height from getHeights() " << mc.getHeights(basePoint, cornerFromBase)[i][j] << std::endl;
+            std::cout << "X AXIS INDEX " << axisIndex_x << std::endl;
+            std::cout << "Z AXIS INDEX " << axisIndex_z << std::endl;
+
             if (mc.getHeights(basePoint, cornerFromBase)[i][j] < basePoint.y - 1)
             {
                 int yAxis_diff = basePoint.y - mc.getHeights(basePoint, cornerFromBase)[i][j];
@@ -100,10 +116,6 @@ void Maze::flattenTerrain()
                     mc.setBlock(coordinate, block);
 
                     // TEST OUTPUT //
-                    std::cout << "Height from getHeights() " << mc.getHeights(basePoint, cornerFromBase)[i][j] << std::endl;
-                    std::cout << "\n";
-                    std::cout << "getBlockCoord ";
-                    print(getBlockCoord);
                     std::cout << "Coordinate ";
                     print(coordinate);
                     std::cout << "Block ";
@@ -134,8 +146,6 @@ void Maze::flattenTerrain()
                     mc.setBlock(coordinate, block);
 
                     // TEST OUTPUT //
-                    std::cout << "Height from getHeights() " << mc.getHeights(basePoint, cornerFromBase)[i][j] << std::endl;
-                    std::cout << "\n";
                     std::cout << "Coordinate ";
                     print(coordinate);
                     std::cout << "Block ";
@@ -147,9 +157,9 @@ void Maze::flattenTerrain()
                     // TEST OUTPUT //
                 }
             }
-            ++axisIndex_x;
+            ++axisIndex_z;
         }
-        ++axisIndex_z;
+        ++axisIndex_x;
     }
     /**
     for (auto &coord : tempCoords)
