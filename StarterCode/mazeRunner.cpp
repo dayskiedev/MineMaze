@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
 
     MazeUtil mu(mode, enhance);
     Agent agent;
+    Maze maze;
 
     std::string input;
     States curState = ST_Main;
@@ -75,7 +76,9 @@ int main(int argc, char *argv[])
         {
             std::cout << "BUILDING MAZE..." << std::endl;
             curState = ST_Main;
-            Maze(mu.getBasePoint().clone(), mu.getLength(), mu.getWidth(), mu.GetStructure(), mode);
+            maze.setFields(mu.getBasePoint().clone(), mu.getLength(), mu.getWidth(), mu.GetStructure(), mode);
+            maze.flattenTerrain();
+            maze.buildMaze();
         }
 
         if (curState == ST_SolveMaze)
@@ -90,7 +93,7 @@ int main(int argc, char *argv[])
                 if (mode) { agent.placePlayer(agent.furtherstFromEntrance(mu.getBasePoint(), mu.getLength(), mu.getWidth())); }
                 else { agent.placePlayer(agent.randStartCord(mu.getBasePoint(), mu.getLength(), mu.getWidth())); }
             }
-            if (stateNum == 2) { agent.solveMaze(); }
+            if (stateNum == 2) { agent.solveMaze();
 
             curState = ST_Main;
         }
@@ -100,6 +103,7 @@ int main(int argc, char *argv[])
             printTeamInfo();
             curState = ST_Main;
         }
+    }
     }
 
     printExitMassage();

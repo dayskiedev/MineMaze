@@ -5,18 +5,16 @@
 #include <iostream>
 #include <string>
 
-/**
 Maze::Maze()
 {
     this->length = 0;
     this->width = 0;
-    this->mode = 0;
+    this->mode = false;
     this->headBlock = nullptr;
     this->headCoord = nullptr;
 }
-*/
 
-Maze::Maze(mcpp::Coordinate basePoint, int xlen,
+void Maze::setFields(mcpp::Coordinate basePoint, int xlen,
            int zlen, char **mazeStructure, bool mode)
 {
     this->length = xlen;
@@ -33,9 +31,6 @@ Maze::Maze(mcpp::Coordinate basePoint, int xlen,
     else {
         this->basePoint = basePoint;
     }
-
-    flattenTerrain();
-    buildMaze();
 }
 
 CoordNode::CoordNode(mcpp::Coordinate coord)
@@ -94,10 +89,11 @@ void Maze::flattenTerrain()
         int axisIndex_z = 0;
         for (size_t j = 0; j < mc.getHeights(basePoint, cornerFromBase)[i].size(); ++j)
         {
-
+            /**
             std::cout << "Height from getHeights() " << mc.getHeights(basePoint, cornerFromBase)[i][j] << std::endl;
             std::cout << "X AXIS INDEX " << axisIndex_x << std::endl;
             std::cout << "Z AXIS INDEX " << axisIndex_z << std::endl;
+            */
 
             if (mc.getHeights(basePoint, cornerFromBase)[i][j] < (basePoint.y - 1))
             {
@@ -112,7 +108,7 @@ void Maze::flattenTerrain()
                     this->addCoordToStart(coordinate.clone());
                     mcpp::BlockType block(mc.getBlock(getBlockCoord));
                     this->addBlockToStart(block.id, block.mod);
-                    // std::this_thread::sleep_for(std::chrono::milliseconds(50));
+                    std::this_thread::sleep_for(std::chrono::milliseconds(50));
                     mc.setBlock(coordinate, block);
 
                     /**
@@ -141,7 +137,7 @@ void Maze::flattenTerrain()
                     this->addCoordToStart(coordinate.clone());
                     mcpp::BlockType block(mcpp::Blocks::AIR);
                     this->addBlockToStart(block.id, block.mod);
-                    // std::this_thread::sleep_for(std::chrono::milliseconds(50));5
+                    std::this_thread::sleep_for(std::chrono::milliseconds(50));
                     mc.setBlock(coordinate, block);
                     ++level_yAxis;
 
@@ -159,6 +155,16 @@ void Maze::flattenTerrain()
                     */
                 }
             }
+            else
+            {
+                mcpp::Coordinate coordinate((basePoint.x + axisIndex_x), basePoint.y, (basePoint.z + axisIndex_z));
+                if(mc.getBlock(coordinate) == mcpp::BlockType(mcpp::Blocks::AIR)) {}
+                else
+                {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+                    mc.setBlock(coordinate, mcpp::BlockType(mcpp::Blocks::AIR));
+                }
+            }
             ++axisIndex_z;
         }
         ++axisIndex_x;
@@ -173,6 +179,7 @@ void Maze::buildMaze()
     {
         for (int col = 0; col < width; ++col)
         {
+            //PLACES ACACIA_WOOD_PLANKS
             if (this->mazeStructure[row][col] == 'x')
             {
                 for (int i = 0; i < 3; ++i)
@@ -186,6 +193,7 @@ void Maze::buildMaze()
                     mc.setBlock(coordinate, mcpp::BlockType(mcpp::Blocks::ACACIA_WOOD_PLANK));
                 }
             }
+            //PLACES BLUE CARPET AT ENTRANCE
             else if ((this->mazeStructure[row][col] == '.') && (row == 0 || row == length - 1))
             {
                 mcpp::Coordinate coordinate(basePoint.x, (basePoint.y), (basePoint.z + col + 1));
@@ -196,6 +204,7 @@ void Maze::buildMaze()
                 std::this_thread::sleep_for(std::chrono::milliseconds(50));
                 mc.setBlock(coordinate, mcpp::BlockType(mcpp::Blocks::BLUE_CARPET));
             }
+            //PLACES BLUE CARPET AT ENTRANCE
             else if ((this->mazeStructure[row][col] == '.') && (col == 0 || col == width - 1))
             {
                 mcpp::Coordinate coordinate((basePoint.x + row + 1), (basePoint.y), basePoint.z);
@@ -225,7 +234,7 @@ void Maze::restore()
 
 Maze::~Maze()
 {
-    // restore();
+    restore();
 
     while (headCoord != nullptr)
     {

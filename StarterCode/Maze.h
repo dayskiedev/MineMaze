@@ -29,9 +29,9 @@ class Maze
 public:
     Maze();
 
-    Maze(mcpp::Coordinate basePoint, int xlen,
-         int zlen, char **mazeStructure,
-         bool mode);
+    void setFields(mcpp::Coordinate basePoint, int xlen,
+         int zlen, char **mazeStructure, bool mode);
+
     void flattenTerrain();
 
     void buildMaze();
@@ -39,10 +39,6 @@ public:
     void restore();
 
     ~Maze();
-
-    void print(mcpp::Coordinate &coord);
-    void print(mcpp::BlockType &block);
-    void print(std::string &out);
 
 private:
     mcpp::MinecraftConnection mc;
