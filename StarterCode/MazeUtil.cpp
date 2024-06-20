@@ -77,8 +77,12 @@ void MazeUtil::CreateStructure() {
 
 void MazeUtil::CreateStructureTerminal() {
     CreateStructure();
-
+    mcpp::MinecraftConnection mc;
     // kind of a scuffed way to do this but we need to teleport the player to a certain coordinate if in testmode for the terminal
+    if(testmode) {
+        mc.doCommand("tp @p 4848 71 4369");
+        basePoint = mc.getPlayerPosition();
+    }
 
     std::cout << "Enter the maze structure (" << length << "x" << width << "): " << std::endl;
     // read in input from terminal
@@ -100,38 +104,29 @@ void MazeUtil::CreateStructureTerminal() {
 void MazeUtil::CheckFloodFill(int** arr, int sl, int sw) {
     FloodFill(arr, sl, sw);
 
-    for(int i = 0; i < length; ++i) {
-        for(int j = 0; j < width; ++j) {
-            std::cout << arr[i][j] << " ";
-        }
-        std::cout <<std::endl;
-    }
 
     for(int i = 0; i < length; ++i) {
         for(int j = 0; j < width; ++j) {
-            std::cout << MazeStructure[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
-    
-    for(int i = 0; i < length; ++i) {
-        for(int j = 0; j < width; ++j) {
             if(MazeStructure[i][j] == '.' && arr[i][j] == 0) {
-                std::cout << "isolation/loop detected at (" << i << "." << j << ")" << std::endl;   
-                 if(i - 1 != 0 && MazeStructure[i - 1][j] == 'x') { // up
+                std::cout << "isolation/loop detected at (" << i << "." << j << ")" << std::endl;
+                // here we want to check if the current postion (found to be a . on a 0 space)
+                // is 1 spot away from a 1, (a . on a one space) if this is true, replace the
+                // ajacent wall with a . and repeat this function,flooding the area from where
+                // it was opened up
+                 if(i > 1 && arr[i - 2][j] == 1) { // up
                     MazeStructure[i - 1][j] = '.';
                     CheckFloodFill(arr, i-1, j);
                 }  
 
-                if(i + 1 != length -1 && MazeStructure[i + 1][j] == 'x') { // down
+                else if(i < length - 1 && arr[i + 2][j] == 1) { // down
                     MazeStructure[i + 1][j] = '.';
                     CheckFloodFill(arr, i+1, j);
                 }  
-                if(j -1 != 0 && MazeStructure[i][j-1] == 'x') { //left
+                else if(j > 1 && arr[i][j-2] == 1) { //left
                     MazeStructure[i][j-1] = '.';
                     CheckFloodFill(arr, i, j-1);
                 } 
-                if(j+ 1 != width -1 && MazeStructure[i][j+1] == 'x') { // right
+                else if(j < width -1 && arr[i][j+2] == 1) { // right
                     MazeStructure[i][j+1] = '.';
                     CheckFloodFill(arr, i, j+1);
                 }
@@ -182,16 +177,8 @@ void MazeUtil::ValidMaze() {
 
     for(int x = 0; x < length; ++x) {
         delete[] compArr[x];
-            }
-            delete[] compArr;
-    return;
-    // pick starting point
-    // swap to 1 if applicable
-    // check if direction can move (ie next spot is 0)
-    // move to that direction
-    // repeat
-
-    // return if not equal to a . or if it goes out of bounds
+    }
+    delete[] compArr;
 }
 
 void MazeUtil::FloodFill(int** compArr, int sl, int sw) {
@@ -239,8 +226,6 @@ void MazeUtil::CreatureStructureRandom() {
 }
 
 void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
-    // works when len and wid are same but not when different?
-    // mode true means running in testmode
     int direction;
     std::random_device rnd;
 
@@ -262,8 +247,6 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
 
     if(direction == 0) {
         int horizontalSplit = 0;
-
-
         // IF we're not in test mode we want to pick a random even number 
         // between the min height and the max height to split the maze
         // using min and max means we cut every possible spot we can until we can no longer cut
@@ -321,7 +304,6 @@ void MazeUtil::RecursiveFill(int minh, int minw, int maxh, int maxw, int d) {
         else {
             wall = std::floor( (minh + maxh ) / 2);
             if(wall % 2 == 0) { wall += 1; }
-            std::cout << "middle position of vertical wall is: " << wall << std::endl;
             MazeStructure[wall][verticalSplit] = '.'; 
         }
 
