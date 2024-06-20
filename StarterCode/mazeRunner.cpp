@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
             maze.setFields(mu.getBasePoint().clone(), mu.getLength(), mu.getWidth(), mu.GetStructure(), mode);
             maze.flattenTerrain();
             maze.buildMaze();
-            mazeExist = true;
+            mazeExist = true; //Once maze is built, mazeExist is true
         }
 
         if (curState == ST_SolveMaze)
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
             }
             if (stateNum == 2 && mazeExist) { agent.solveMaze(mu.getBasePoint(), mu.getLength(), mu.getWidth()); }
 
-            if (!mazeExist) {
+            if (!mazeExist) { //If maze does not exist then the message is printed
                 std::cout << std::endl << "Please ensure a Maze is built." << std::endl;
             }
 

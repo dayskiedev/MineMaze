@@ -9,7 +9,7 @@ Agent::~Agent()
 {
 }
 
-mcpp::Coordinate Agent::randStartCord(mcpp::Coordinate basePoint, int length, int width) {
+mcpp::Coordinate Agent::randStartCord(mcpp::Coordinate basePoint, int length, int width) { //Teleport player anywhere within the maze
     mcpp::MinecraftConnection mc;
 
     mcpp::Coordinate randomPoint;
@@ -17,29 +17,29 @@ mcpp::Coordinate Agent::randStartCord(mcpp::Coordinate basePoint, int length, in
 
     tempPoint = basePoint;
 
-    int randomLen = rand() % (length - 1) + 1;
+    int randomLen = rand() % (length - 1) + 1; //Random any number between 1 to the length - 1 because length will be the boundary, hence -1 will place player inside the maze
     int randomWid = rand() % (width - 1) + 1;
 
-    tempPoint.x = tempPoint.x + randomLen; 
+    tempPoint.x = tempPoint.x + randomLen; //The basepoint + the random number generated
     tempPoint.z = tempPoint.z + randomWid;
     
-    while (!(mc.getBlock(tempPoint) == mcpp::Blocks::AIR)) { //Still Teleporting inside of block
-        tempPoint.x = tempPoint.x - randomLen; 
+    while (!(mc.getBlock(tempPoint) == mcpp::Blocks::AIR)) { //If the randomPoint generated has a block, then while loop is entered
+        tempPoint.x = tempPoint.x - randomLen; //The randomNum is subtracted from tempPoint
         tempPoint.z = tempPoint.z - randomWid;
 
-        randomLen = rand() % (length - 1) + 1;
+        randomLen = rand() % (length - 1) + 1; //Reroll of the random
         randomWid = rand() % (width - 1) + 1;
 
-        tempPoint.x = tempPoint.x + randomLen; 
+        tempPoint.x = tempPoint.x + randomLen; //New tempPoints are generated
         tempPoint.z = tempPoint.z + randomWid;
     }
 
-    randomPoint = tempPoint;
+    randomPoint = tempPoint; //While loop is exited means tempValue is an empty space within the loop
 
     return randomPoint;
 }
 
-mcpp::Coordinate Agent::furtherstFromEntrance(mcpp::Coordinate basePoint, int length, int width) {
+mcpp::Coordinate Agent::furtherstFromEntrance(mcpp::Coordinate basePoint, int length, int width) { //Furthest point from the entrance - Test mode
     mcpp::MinecraftConnection mc;
 
     mcpp::Coordinate farFromEntrance;
@@ -53,42 +53,42 @@ mcpp::Coordinate Agent::furtherstFromEntrance(mcpp::Coordinate basePoint, int le
 
     tempValue = farFromEntrance;
 
-    tempValue.x++;
-    tempValue.z++;
+    tempValue.x++; 
+    tempValue.z++; //X and Z values are incremented meaning now the coordinates are the corner of the maze
 
 
-    while (!(mc.getBlock(tempValue) == mcpp::Blocks::AIR)) {
-        if (w == 0) {
+    while (!(mc.getBlock(tempValue) == mcpp::Blocks::AIR)) { //To find the entrance of the maze, so while the block read is not air, loop continue 
+        if (w == 0) { //Read through the first side of the maze, along the x+
             tempValue.x++;
             l++;
             if (l == length) {
                 w++;
             }
         }
-        else if (l == length) {
+        else if (l == length) { //Read through the second side, along the z+
             tempValue.z++;
             w++;
             if (w == width) {
                 l--;
             }
         }
-        else if (w == width) {
+        else if (w == width) { //Read through the third side, along x-
             tempValue.x--;;
             l--;
             if (l == 0) {
                 w--;
             }
         }
-        else if (l == 0) {
+        else if (l == 0) { //Read through fourth side, along z-
             tempValue.z--; 
         }
     }
 
     int identifier = 0;
 
-    if (tempValue.x == (basePoint.x + 1)) { //right
+    if (tempValue.x == (basePoint.x + 1)) { //If entrance is at the right hand wall
         identifier = tempValue.z - basePoint.z;
-        if (identifier <= width / 2) {
+        if (identifier <= width / 2) { /*Split the wall into 2 parts, and assigns tempValue to the opposite corner, where player is teleported to*/
             tempValue.x = basePoint.x + (length - 1);
             tempValue.z = basePoint.z + (width - 1);
         }
@@ -98,7 +98,7 @@ mcpp::Coordinate Agent::furtherstFromEntrance(mcpp::Coordinate basePoint, int le
 
         }
     }
-    else if (tempValue.z == (basePoint.z + 1)) { //bottom
+    else if (tempValue.z == (basePoint.z + 1)) { //If entrance is at the bottom side wall
         identifier = tempValue.x - basePoint.x;
         if (identifier <= length / 2) {
             tempValue.x = basePoint.x + (length - 1);
@@ -109,7 +109,7 @@ mcpp::Coordinate Agent::furtherstFromEntrance(mcpp::Coordinate basePoint, int le
             tempValue.z = basePoint.z + (width - 1); 
         }
     }
-    else if (tempValue.x == (basePoint.x + 9)) { //left
+    else if (tempValue.x == (basePoint.x + 9)) { //If entrance is at the left hand wall
         identifier = tempValue.z - basePoint.z;
         if (identifier <= width / 2) {
             tempValue.x = basePoint.x + 2;
@@ -120,7 +120,7 @@ mcpp::Coordinate Agent::furtherstFromEntrance(mcpp::Coordinate basePoint, int le
             tempValue.z = basePoint.z + 2;
         }
     }
-    else if (tempValue.z == (basePoint.z + 9)) { //top
+    else if (tempValue.z == (basePoint.z + 9)) { //If entrance is at the top side wall
         identifier = tempValue.x - basePoint.x;
         if (identifier <= length / 2) {
             tempValue.x = basePoint.x + (length - 1);
@@ -160,8 +160,8 @@ void Agent::solveMaze(mcpp::Coordinate basePoint, int length, int width) {
     int boundaryY = boundary.y - pointLoc.y;
     int boundaryZ = boundary.z - pointLoc.z;
 
-    if ((boundaryX > 0 && boundaryX < 8) && (boundaryZ > 0 && boundaryZ < 8) && (boundaryY > 0 && boundaryY < 2)) {
-        while (!bCarpetFound) {
+    if ((boundaryX > 0 && boundaryX < 8) && (boundaryZ > 0 && boundaryZ < 8) && (boundaryY > 0 && boundaryY < 2)) { //Check if player is within the maze
+        while (!bCarpetFound) { // While blue carpet is not found, the below 'if' statements determine the direction to start
             int vectorCounter = 0; 
             if (mc.getBlock(pointLoc + MOVE_ZPLUS) == mcpp::Blocks::AIR) {// Move to zPlus if it is empty 
                 zPlus(pointLoc, vectorCounter); 
@@ -180,7 +180,7 @@ void Agent::solveMaze(mcpp::Coordinate basePoint, int length, int width) {
         printAndGuideSolve(solveCord); //Print solveCord vector - the solution to the maze
         solveCord.clear(); //Clear the vector
     }
-    else {
+    else { //If player is outside of the maze, the following will be called
         std::cout << std::endl << "Please be wintin a Maze for escape route to be shown." << std::endl;
     }
 }
