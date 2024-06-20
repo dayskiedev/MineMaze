@@ -101,39 +101,37 @@ void MazeUtil::CreateStructureTerminal() {
     std::cout << "Maze read successfully!" << std::endl;
     PrintMazeInfo();
 }
-void MazeUtil::CheckFloodFill(int** arr, int sl, int sw) {
-    FloodFill(arr, sl, sw);
 
+void MazeUtil::CheckFloodFill(int** arr, int sl, int sw, char c) {
+    FloodFill(arr, sl, sw, c);
 
     for(int i = 0; i < length; ++i) {
         for(int j = 0; j < width; ++j) {
-            if(MazeStructure[i][j] == '.' && arr[i][j] == 0) {
-                std::cout << "isolation/loop detected at (" << i << "." << j << ")" << std::endl;
+            if(MazeStructure[i][j] == c && arr[i][j] == 0) {
                 // here we want to check if the current postion (found to be a . on a 0 space)
                 // is 1 spot away from a 1, (a . on a one space) if this is true, replace the
                 // ajacent wall with a . and repeat this function,flooding the area from where
                 // it was opened up
                  if(i > 1 && arr[i - 2][j] == 1) { // up
-                    MazeStructure[i - 1][j] = '.';
-                    CheckFloodFill(arr, i-1, j);
+                    MazeStructure[i - 1][j] = c;
+                    CheckFloodFill(arr, i-1, j, c);
                 }  
 
                 else if(i < length - 1 && arr[i + 2][j] == 1) { // down
-                    MazeStructure[i + 1][j] = '.';
-                    CheckFloodFill(arr, i+1, j);
+                    MazeStructure[i + 1][j] = c;
+                    CheckFloodFill(arr, i+1, j, c);
                 }  
                 else if(j > 1 && arr[i][j-2] == 1) { //left
-                    MazeStructure[i][j-1] = '.';
-                    CheckFloodFill(arr, i, j-1);
+                    MazeStructure[i][j-1] = c;
+                    CheckFloodFill(arr, i, j-1, c);
                 } 
                 else if(j < width -1 && arr[i][j+2] == 1) { // right
-                    MazeStructure[i][j+1] = '.';
-                    CheckFloodFill(arr, i, j+1);
+                    MazeStructure[i][j+1] = c;
+                    CheckFloodFill(arr, i, j+1, c);
                 }
             }
         }
     }
-    std::cout << "no loops detected." << std::endl;
     return;
 }
 
@@ -173,7 +171,38 @@ void MazeUtil::ValidMaze() {
         }
     }
 
-    CheckFloodFill(compArr, startL, startW);
+    std::cout << "before isolation check" << std::endl;
+    for(int i = 0; i < length; ++i) {
+        for(int j = 0; j < width; ++j) {
+            std::cout << MazeStructure[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+
+
+    CheckFloodFill(compArr, startL, startW, '.');
+    std::cout << "removed isolations" << std::endl; 
+    for(int i = 0; i < length; ++i) {
+        for(int j = 0; j < width; ++j) {
+            std::cout << MazeStructure[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+
+
+    for(int i = 0; i < length; ++i) { for(int j = 0; j < width; ++j) { compArr[i][j] = 0; } }
+    // now that we have an open maze we need to check for any loops, and then connect the walls to stop
+    // these loops from ppearing
+    CheckFloodFill(compArr, 0, 0, 'x');
+
+    std::cout << "connected loops" << std::endl; 
+    for(int i = 0; i < length; ++i) {
+        for(int j = 0; j < width; ++j) {
+            std::cout << MazeStructure[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+
 
     for(int x = 0; x < length; ++x) {
         delete[] compArr[x];
@@ -181,19 +210,19 @@ void MazeUtil::ValidMaze() {
     delete[] compArr;
 }
 
-void MazeUtil::FloodFill(int** compArr, int sl, int sw) {
+void MazeUtil::FloodFill(int** compArr, int sl, int sw, char c) {
     if(sl < 0 || sw < 0 || sl >= length || sw >= width 
-    || MazeStructure[sl][sw] != '.' || compArr[sl][sw] == 1) { return; }
+    || MazeStructure[sl][sw] != c || compArr[sl][sw] == 1) { return; }
     // if current spot is not a dot we go back
     // but we also need to make sure the spot isnt filled already
     // this video helped with flood fill https://youtu.be/aehEcTEPtCs?si=4c3jc9xTELWiEXmG
 
     compArr[sl][sw] = 1;
     // move onto 4 other directions
-    FloodFill(compArr, sl - 1, sw); // up
-    FloodFill(compArr, sl + 1, sw); // down
-    FloodFill(compArr, sl, sw - 1); // left
-    FloodFill(compArr, sl, sw + 1); // right
+    FloodFill(compArr, sl - 1, sw, c); // up
+    FloodFill(compArr, sl + 1, sw, c); // down
+    FloodFill(compArr, sl, sw - 1, c); // left
+    FloodFill(compArr, sl, sw + 1, c); // right
 }
 
 ///

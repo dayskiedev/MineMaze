@@ -17,17 +17,17 @@ class MazeUtil {
 
         void CreateStructure();
         void CreateStructureTerminal();
+
         void CreatureStructureRandom();
+        void RecursiveFill(int minh, int minw, int maxh, int maxw, int d);
         void CreateMazeEntrance();
 
         void PrintMazeInfo();
 
         // enhancment
         void ValidMaze();
-        void FloodFill(int** compArr, int sl, int sw);
-        void CheckFloodFill(int** arr, int sl, int sw);
-
-        void RecursiveFill(int minh, int minw, int maxh, int maxw, int d);
+        void FloodFill(int** compArr, int sl, int sw, char c);
+        void CheckFloodFill(int** arr, int sl, int sw, char c);
 
         int getLength() { return length; }
         int getWidth() { return width; }

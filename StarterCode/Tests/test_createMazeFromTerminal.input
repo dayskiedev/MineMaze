@@ -2,11 +2,30 @@
 1
 done
 7 9
-xxxxxx.xx
-x.......x
-x..xxx..x
-x..x.x..x
-xxxxxx..x
-x..x.x..x
+xxxxxxxxx
+x.....x.x
+x.xxx.x.x
+x.x.x.x.x
+..xxx.xxx
+x.....x.x
 xxxxxxxxx
 5
+
+0- empty
+xxxxxxxxx
+x........
+x.......x
+x.......x
+x.......x
+x.......x
+xxxxxxxxx
+
+1-loops and isolations
+xxxxxxxxx
+x.....x.x
+..xxx.x.x
+x.x.x.x.x
+x.xxx.xxx
+x.....x.x
+xxxxxxxxx
+
