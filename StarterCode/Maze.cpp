@@ -64,24 +64,14 @@ void Maze::flattenTerrain()
 {
     mcpp::Coordinate cornerFromBase(basePoint.x + length + 2, basePoint.y, basePoint.z + width + 2);
 
-    /**
+    ///**
     std::cout << "BASEPOINT" << std::endl;
-    print(basePoint);
+    std::cout << basePoint;
     std::cout << "\n";
     std::cout << "CORNERPOINT" << std::endl;
-    print(cornerFromBase);
+    std::cout << cornerFromBase;
     std::cout << "\n";
-    for (size_t i = 0; i < mc.getHeights(basePoint, cornerFromBase).size(); ++i)
-    {
-        for (size_t j = 0; j < mc.getHeights(basePoint, cornerFromBase)[i].size(); ++j)
-        {
-            std::cout << mc.getHeights(basePoint, cornerFromBase)[i][j] << " ";
-        }
-        std::cout << "\n";
-    }
-    std::cout << "\n";
-    std::cout << "\n";
-    */
+    //*/
 
     int axisIndex_x = 0;
     for (size_t i = 0; i < mc.getHeights(basePoint, cornerFromBase).size(); ++i)
@@ -89,11 +79,11 @@ void Maze::flattenTerrain()
         int axisIndex_z = 0;
         for (size_t j = 0; j < mc.getHeights(basePoint, cornerFromBase)[i].size(); ++j)
         {
-            /**
+            ///**
             std::cout << "Height from getHeights() " << mc.getHeights(basePoint, cornerFromBase)[i][j] << std::endl;
             std::cout << "X AXIS INDEX " << axisIndex_x << std::endl;
             std::cout << "Z AXIS INDEX " << axisIndex_z << std::endl;
-            */
+            //*/
 
             // IF TERRAIN IS LOWER THAN GROUND AT BASEPOINT
             if (mc.getHeights(basePoint, cornerFromBase)[i][j] < (basePoint.y - 1))
@@ -112,18 +102,18 @@ void Maze::flattenTerrain()
                     mcpp::BlockType setBlock(mc.getBlock(getBlockCoord));
                     //std::this_thread::sleep_for(std::chrono::milliseconds(50));
                     mc.setBlock(coordinate, setBlock);
-                    /**
+                   // /**
                     // TEST OUTPUT //
                     std::cout << "Coordinate ";
-                    print(coordinate);
+                    std::cout << coordinate;
                     std::cout << "Block ";
-                    print(block);
+                    std::cout << block;
                     std::cout << "yAxis_diff " << yAxis_diff << std::endl;
                     std::cout << "level_yAxis " << level_yAxis << std::endl;
                     std::cout << "\n";
                     std::cout << "\n";
                     // TEST OUTPUT //
-                    */
+                  //  */
                     ++level_yAxis;
                 }
             }
@@ -132,26 +122,27 @@ void Maze::flattenTerrain()
             {
                 int yAxis_diff = mc.getHeights(basePoint, cornerFromBase)[i][j] - (basePoint.y - 1);
                 int level_yAxis = 0;
+                int height_atIndex = mc.getHeights(basePoint, cornerFromBase)[i][j];
                 while (level_yAxis != yAxis_diff)
                 {
-                    mcpp::Coordinate coordinate((basePoint.x + axisIndex_x), (mc.getHeights(basePoint, cornerFromBase)[i][j] - level_yAxis), (basePoint.z + axisIndex_z));
+                    mcpp::Coordinate coordinate((basePoint.x + axisIndex_x), (height_atIndex - level_yAxis), (basePoint.z + axisIndex_z));
                     this->addCoordToStart(coordinate.clone());
                     mcpp::BlockType block = mc.getBlock(coordinate);
                     this->addBlockToStart(block.id, block.mod);
                     //std::this_thread::sleep_for(std::chrono::milliseconds(50));
                     mc.setBlock(coordinate, mcpp::BlockType(mcpp::Blocks::AIR));
-                    /**
+                //    /**
                     // TEST OUTPUT //
                     std::cout << "Coordinate ";
-                    print(coordinate);
+                    std::cout << coordinate;
                     std::cout << "Block ";
-                    print(block);
+                    std::cout << block;
                     std::cout << "yAxis_diff " << yAxis_diff << std::endl;
                     std::cout << "level_yAxis " << level_yAxis << std::endl;
                     std::cout << "\n";
                     std::cout << "\n";
                     // TEST OUTPUT //
-                    */
+                //    */
                     ++level_yAxis;
                 }
             }
