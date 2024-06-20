@@ -28,7 +28,7 @@ Maze::Maze(mcpp::Coordinate basePoint, int xlen,
     this->headCoord = nullptr;
 
     flattenTerrain();
-    //buildMaze();
+    buildMaze();
 }
 
 CoordNode::CoordNode(mcpp::Coordinate coord)
@@ -102,11 +102,12 @@ void Maze::flattenTerrain()
             {
                 int yAxis_diff = basePoint.y - mc.getHeights(basePoint, cornerFromBase)[i][j];
                 int level_yAxis = 0;
-                mcpp::Coordinate getBlockCoord((basePoint.x + axisIndex_x), mc.getHeights(basePoint, cornerFromBase)[i][j], (basePoint.z + axisIndex_z));
+                int height_atIndex = mc.getHeights(basePoint, cornerFromBase)[i][j];
+                mcpp::Coordinate getBlockCoord((basePoint.x + axisIndex_x), height_atIndex, (basePoint.z + axisIndex_z));
 
                 while (level_yAxis != yAxis_diff)
                 {
-                    mcpp::Coordinate coordinate((basePoint.x + axisIndex_x), (mc.getHeights(basePoint, cornerFromBase)[i][j] + level_yAxis), (basePoint.z + axisIndex_z));
+                    mcpp::Coordinate coordinate((basePoint.x + axisIndex_x), (height_atIndex + level_yAxis), (basePoint.z + axisIndex_z));
                     // tempCoords.push_back(coordinate);
                     this->addCoordToStart(coordinate.clone());
                     mcpp::BlockType block(mc.getBlock(getBlockCoord));
@@ -135,7 +136,6 @@ void Maze::flattenTerrain()
                 int level_yAxis = 0;
                 while (level_yAxis != yAxis_diff)
                 {
-                    //++level_yAxis;
                     mcpp::Coordinate coordinate((basePoint.x + axisIndex_x), (mc.getHeights(basePoint, cornerFromBase)[i][j] - level_yAxis), (basePoint.z + axisIndex_z));
                     // tempCoords.push_back(coordinate);
                     this->addCoordToStart(coordinate.clone());
