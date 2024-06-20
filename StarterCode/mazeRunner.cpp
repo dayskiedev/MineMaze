@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
     mcpp::MinecraftConnection mc;
     bool mode = false;
     bool enhance = false; // enchance mode
+    bool mazeExist = false; // check if there is maze present
     if (argc > 1)
     {
         for (int i = 0; i < argc; ++i)
@@ -79,6 +80,7 @@ int main(int argc, char *argv[])
             maze.setFields(mu.getBasePoint().clone(), mu.getLength(), mu.getWidth(), mu.GetStructure(), mode);
             maze.flattenTerrain();
             maze.buildMaze();
+            mazeExist = true;
         }
 
         if (curState == ST_SolveMaze)
@@ -87,13 +89,17 @@ int main(int argc, char *argv[])
                 printSolveMazeMenu();
             } while (!sanatiseInput(3, stateNum));
 
-            if (stateNum == 1)
+            if (stateNum == 1 && mazeExist)
             {
                 // if in testmode we want to place the player furtherst from the
                 if (mode) { agent.placePlayer(agent.furtherstFromEntrance(mu.getBasePoint(), mu.getLength(), mu.getWidth())); }
                 else { agent.placePlayer(agent.randStartCord(mu.getBasePoint(), mu.getLength(), mu.getWidth())); }
             }
-            if (stateNum == 2) { agent.solveMaze();
+            if (stateNum == 2 && mazeExist) { agent.solveMaze(mu.getBasePoint(), mu.getLength(), mu.getWidth()); }
+
+            if (!mazeExist) {
+                std::cout << std::endl << "Please ensure a Maze is built." << std::endl;
+            }
 
             curState = ST_Main;
         }
@@ -104,8 +110,6 @@ int main(int argc, char *argv[])
             curState = ST_Main;
         }
     }
-    }
-
     printExitMassage();
 
     return EXIT_SUCCESS;

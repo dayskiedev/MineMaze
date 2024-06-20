@@ -144,31 +144,45 @@ void Agent::placePlayer(mcpp::Coordinate placePoint) {
     mc.setPlayerPosition(placePoint);
 }
 
-void Agent::solveMaze() {
+void Agent::solveMaze(mcpp::Coordinate basePoint, int length, int width) {
     mcpp::MinecraftConnection mc;
 
     mcpp::Coordinate pointLoc = mc.getPlayerPosition();
+    mcpp::Coordinate boundary;
 
     bCarpetFound = false; //Carpet not found
 
-    while (!bCarpetFound) {
-        int vectorCounter = 0; 
-        if (mc.getBlock(pointLoc + MOVE_ZPLUS) == mcpp::Blocks::AIR) {// Move to zPlus if it is empty 
-            zPlus(pointLoc, vectorCounter); 
+    boundary.x = basePoint.x + length;
+    boundary.y = basePoint.y + 3;
+    boundary.z = basePoint.z + width;
+
+    int boundaryX = boundary.x - pointLoc.x;
+    int boundaryY = boundary.y - pointLoc.y;
+    int boundaryZ = boundary.z - pointLoc.z;
+
+    if ((boundaryX > 0 && boundaryX < 9) && (boundaryZ > 0 && boundaryZ < 9) && (boundaryY > 0 && boundaryY < 3)) {
+        while (!bCarpetFound) {
+            int vectorCounter = 0; 
+            if (mc.getBlock(pointLoc + MOVE_ZPLUS) == mcpp::Blocks::AIR) {// Move to zPlus if it is empty 
+                zPlus(pointLoc, vectorCounter); 
+            }
+            else if (mc.getBlock(pointLoc + MOVE_XPLUS) == mcpp::Blocks::AIR) {// Move to xPlus if it is empty 
+                xPlus(pointLoc, vectorCounter);
+            }
+            else if (mc.getBlock(pointLoc + MOVE_ZMINUS) == mcpp::Blocks::AIR) {// Move to zMinus if it is empty 
+                zMinus(pointLoc, vectorCounter);
+            }
+            else if (mc.getBlock(pointLoc + MOVE_XMINUS) == mcpp::Blocks::AIR) {// Move to xMinus if it is empty 
+                xMinus(pointLoc, vectorCounter);
+            }
+            bCarpetFound = true;
         }
-        else if (mc.getBlock(pointLoc + MOVE_XPLUS) == mcpp::Blocks::AIR) {// Move to xPlus if it is empty 
-            xPlus(pointLoc, vectorCounter);
-        }
-        else if (mc.getBlock(pointLoc + MOVE_ZMINUS) == mcpp::Blocks::AIR) {// Move to zMinus if it is empty 
-            zMinus(pointLoc, vectorCounter);
-        }
-        else if (mc.getBlock(pointLoc + MOVE_XMINUS) == mcpp::Blocks::AIR) {// Move to xMinus if it is empty 
-            xMinus(pointLoc, vectorCounter);
-        }
-        bCarpetFound = true;
+        printAndGuideSolve(solveCord); //Print solveCord vector - the solution to the maze
+        solveCord.clear(); //Clear the vector
     }
-    printAndGuideSolve(solveCord); //Print solveCord vector - the solution to the maze
-    solveCord.clear(); //Clear the vector
+    else {
+        std::cout << std::endl << "Please be wintin a Maze for escape route to be shown." << std::endl;
+    }
 }
 
 void Agent::printAndGuideSolve (std::vector<mcpp::Coordinate> completeVec) { // Print all coordinate in the vector which leads to the blue carpet
