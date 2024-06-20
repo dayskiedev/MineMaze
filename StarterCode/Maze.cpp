@@ -98,7 +98,7 @@ void Maze::flattenTerrain()
             std::cout << "X AXIS INDEX " << axisIndex_x << std::endl;
             std::cout << "Z AXIS INDEX " << axisIndex_z << std::endl;
 
-            if (mc.getHeights(basePoint, cornerFromBase)[i][j] < basePoint.y - 1)
+            if (mc.getHeights(basePoint, cornerFromBase)[i][j] < (basePoint.y - 1))
             {
                 int yAxis_diff = basePoint.y - mc.getHeights(basePoint, cornerFromBase)[i][j];
                 int level_yAxis = 0;
@@ -129,21 +129,22 @@ void Maze::flattenTerrain()
                     ++level_yAxis;
                 }
             }
-            else if (mc.getHeights(basePoint, cornerFromBase)[i][j] > basePoint.y - 1)
+            else if (mc.getHeights(basePoint, cornerFromBase)[i][j] > (basePoint.y -1))
             {
                 int yAxis_diff = mc.getHeights(basePoint, cornerFromBase)[i][j] - (basePoint.y - 1);
                 int level_yAxis = 0;
                 while (level_yAxis != yAxis_diff)
                 {
-                    ++level_yAxis;
-                    mcpp::Coordinate coordinate((basePoint.x + axisIndex_x), ((mc.getHeights(basePoint, cornerFromBase)[i][j] + 1) - (level_yAxis)), (basePoint.z + axisIndex_z));
+                    //++level_yAxis;
+                    mcpp::Coordinate coordinate((basePoint.x + axisIndex_x), (mc.getHeights(basePoint, cornerFromBase)[i][j] - level_yAxis), (basePoint.z + axisIndex_z));
                     // tempCoords.push_back(coordinate);
                     this->addCoordToStart(coordinate.clone());
                     mcpp::BlockType block(mcpp::Blocks::AIR);
                     // tempBlocks.push_back(block);
                     this->addBlockToStart(block.id, block.mod);
-                    // std::this_thread::sleep_for(std::chrono::milliseconds(50));
+                    // std::this_thread::sleep_for(std::chrono::milliseconds(50));5
                     mc.setBlock(coordinate, block);
+                    ++level_yAxis;
 
                     // TEST OUTPUT //
                     std::cout << "Coordinate ";
