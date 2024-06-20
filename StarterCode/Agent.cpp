@@ -84,13 +84,10 @@ mcpp::Coordinate Agent::furtherstFromEntrance(mcpp::Coordinate basePoint, int le
         }
     }
 
-std::cout << tempValue << std::endl;
-
     int identifier = 0;
 
     if (tempValue.x == (basePoint.x + 1)) { //right
         identifier = tempValue.z - basePoint.z;
-std::cout << identifier << std::endl;
         if (identifier <= width / 2) {
             tempValue.x = basePoint.x + (length - 1);
             tempValue.z = basePoint.z + (width - 1);
@@ -100,11 +97,9 @@ std::cout << identifier << std::endl;
             tempValue.z = basePoint.z + 2;
 
         }
-std::cout << 1 << std::endl;
     }
     else if (tempValue.z == (basePoint.z + 1)) { //bottom
         identifier = tempValue.x - basePoint.x;
-std::cout << identifier << std::endl;
         if (identifier <= length / 2) {
             tempValue.x = basePoint.x + (length - 1);
             tempValue.z = basePoint.z + (width - 1);
@@ -113,11 +108,9 @@ std::cout << identifier << std::endl;
             tempValue.x = basePoint.x + 2;
             tempValue.z = basePoint.z + (width - 1); 
         }
-std::cout << 2 << std::endl;
     }
     else if (tempValue.x == (basePoint.x + 9)) { //left
         identifier = tempValue.z - basePoint.z;
-std::cout << identifier << std::endl;
         if (identifier <= width / 2) {
             tempValue.x = basePoint.x + 2;
             tempValue.z = basePoint.z + (width - 1); 
@@ -126,11 +119,9 @@ std::cout << identifier << std::endl;
             tempValue.x = basePoint.x + 2;
             tempValue.z = basePoint.z + 2;
         }
-std::cout << 3 << std::endl;
     }
     else if (tempValue.z == (basePoint.z + 9)) { //top
         identifier = tempValue.x - basePoint.x;
-std::cout << identifier << std::endl;
         if (identifier <= length / 2) {
             tempValue.x = basePoint.x + (length - 1);
             tempValue.z = basePoint.z + 2;      
@@ -139,12 +130,9 @@ std::cout << identifier << std::endl;
             tempValue.x = basePoint.x + 2;
             tempValue.z = basePoint.z + 2;
         }
-std::cout << 4 << std::endl;
     }
 
     farFromEntrance = tempValue;
-
-std::cout << farFromEntrance << std::endl;
 
     return farFromEntrance;
 }
@@ -180,7 +168,6 @@ void Agent::solveMaze() {
         bCarpetFound = true;
     }
     printAndGuideSolve(solveCord); //Print solveCord vector - the solution to the maze
-    mc.setBlock(solveCord[solveCord.size() - 1], mcpp::Blocks::BLUE_CARPET);
     solveCord.clear(); //Clear the vector
 }
 
@@ -193,6 +180,11 @@ void Agent::printAndGuideSolve (std::vector<mcpp::Coordinate> completeVec) { // 
         mc.setBlock(completeVec[i], mcpp::Blocks::LIME_CARPET);
         sleep(2); //Time Delay
         mc.setBlock(completeVec[i], mcpp::Blocks::AIR);
+
+        if (i == completeVec.size() - 1) {
+            sleep(2);
+            mc.setBlock(completeVec[i], mcpp::Blocks::BLUE_CARPET);
+        }
     }
 }
 
