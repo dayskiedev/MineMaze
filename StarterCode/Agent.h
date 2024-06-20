@@ -36,7 +36,7 @@ public:
     mcpp::Coordinate furtherstFromEntrance(mcpp::Coordinate basePoint, int length, int width);
 
     void placePlayer(mcpp::Coordinate placePoint);
-    void solveMaze();
+    void solveMaze(mcpp::Coordinate basePoint, int length, int width);
 
 
 private:
