@@ -23,7 +23,6 @@ int main(int argc, char *argv[])
     bool mode = false;
     bool enhance = false; // enchance mode
     bool mazeExist = false; // check if there is maze present
-    bool mazeExist = false; // check if there is maze present
     if (argc > 1)
     {
         for (int i = 0; i < argc; ++i)

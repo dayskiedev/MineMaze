@@ -160,7 +160,7 @@ void Agent::solveMaze(mcpp::Coordinate basePoint, int length, int width) {
     int boundaryY = boundary.y - pointLoc.y;
     int boundaryZ = boundary.z - pointLoc.z;
 
-    if ((boundaryX > 0 && boundaryX < 8) && (boundaryZ > 0 && boundaryZ < 8) && (boundaryY > 0 && boundaryY <= 3)) {
+    if ((boundaryX > 0 && boundaryX < 8) && (boundaryZ > 0 && boundaryZ < 8) && (boundaryY > 0 && boundaryY < 2)) {
         while (!bCarpetFound) {
             int vectorCounter = 0; 
             if (mc.getBlock(pointLoc + MOVE_ZPLUS) == mcpp::Blocks::AIR) {// Move to zPlus if it is empty 
