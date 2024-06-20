@@ -19,13 +19,20 @@ Maze::Maze()
 Maze::Maze(mcpp::Coordinate basePoint, int xlen,
            int zlen, char **mazeStructure, bool mode)
 {
-    this->basePoint = basePoint;
     this->length = xlen;
     this->width = zlen;
     this->mode = mode;
     this->mazeStructure = mazeStructure;
     this->headBlock = nullptr;
     this->headCoord = nullptr;
+
+    if(basePoint.y > (mc.getHeight(basePoint.x, basePoint.z)) + 1) {
+
+        this->basePoint = mcpp::Coordinate(basePoint.x, ((mc.getHeight(basePoint.x, basePoint.z)) + 1), basePoint.z);
+    }
+    else {
+        this->basePoint = basePoint;
+    }
 
     flattenTerrain();
     buildMaze();
@@ -73,6 +80,7 @@ void Maze::flattenTerrain()
     print(cornerFromBase);
     std::cout << "\n";
 
+    /**
     for (size_t i = 0; i < mc.getHeights(basePoint, cornerFromBase).size(); ++i)
     {
         for (size_t j = 0; j < mc.getHeights(basePoint, cornerFromBase)[i].size(); ++j)
@@ -83,9 +91,7 @@ void Maze::flattenTerrain()
     }
     std::cout << "\n";
     std::cout << "\n";
-
-    // std::vector<mcpp::Coordinate> tempCoords;
-    // std::vector<mcpp::BlockType> tempBlocks;
+    */
 
     int axisIndex_x = 0;
     for (size_t i = 0; i < mc.getHeights(basePoint, cornerFromBase).size(); ++i)
@@ -108,10 +114,8 @@ void Maze::flattenTerrain()
                 while (level_yAxis != yAxis_diff)
                 {
                     mcpp::Coordinate coordinate((basePoint.x + axisIndex_x), (height_atIndex + level_yAxis), (basePoint.z + axisIndex_z));
-                    // tempCoords.push_back(coordinate);
                     this->addCoordToStart(coordinate.clone());
                     mcpp::BlockType block(mc.getBlock(getBlockCoord));
-                    // tempBlocks.push_back(block);
                     this->addBlockToStart(block.id, block.mod);
                     // std::this_thread::sleep_for(std::chrono::milliseconds(50));
                     mc.setBlock(coordinate, block);
@@ -162,26 +166,11 @@ void Maze::flattenTerrain()
         }
         ++axisIndex_x;
     }
-    /**
-    for (auto &coord : tempCoords)
-    {
-        this->addCoordToStart(coord.clone());
-    }
-    for (auto &block : tempBlocks)
-    {
-        this->addBlockToStart(block.id, block.mod);
-    }
-    */
 }
 
 void Maze::buildMaze()
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    std::string bm = "Build maze";
-    print(bm);
-
-    // std::vector<mcpp::Coordinate> tempCoords;
-    // std::vector<mcpp::BlockType> tempBlocks;
 
     for (int row = 0; row < length; ++row)
     {
@@ -192,10 +181,8 @@ void Maze::buildMaze()
                 for (int i = 0; i < 3; ++i)
                 {
                     mcpp::Coordinate coordinate((basePoint.x + row + 1), (basePoint.y + i), (basePoint.z + col + 1));
-                    // tempCoords.push_back(cooridnate);
                     this->addCoordToStart(coordinate.clone());
                     mcpp::BlockType block(mc.getBlock(coordinate));
-                    // tempBlocks.push_back(block);
                     print(block);
                     this->addBlockToStart(block.id, block.mod);
 
@@ -206,39 +193,29 @@ void Maze::buildMaze()
             else if ((this->mazeStructure[row][col] == '.') && (row == 0 || row == length - 1))
             {
                 mcpp::Coordinate coordinate(basePoint.x, (basePoint.y), (basePoint.z + col + 1));
-                // tempCoords.push_back(cooridnate);
                 this->addCoordToStart(coordinate.clone());
                 mcpp::BlockType block(mc.getBlock(coordinate));
-                // tempBlocks.push_back(block);
                 this->addBlockToStart(block.id, block.mod);
 
                 std::this_thread::sleep_for(std::chrono::milliseconds(50));
                 mc.setBlock(coordinate, mcpp::BlockType(mcpp::Blocks::BLUE_CARPET));
+
+                //std::cout << "ping row" << std::endl;
             }
             else if ((this->mazeStructure[row][col] == '.') && (col == 0 || col == width - 1))
             {
                 mcpp::Coordinate coordinate((basePoint.x + row + 1), (basePoint.y), basePoint.z);
-                // tempCoords.push_back(cooridnate);
                 this->addCoordToStart(coordinate.clone());
                 mcpp::BlockType block(mc.getBlock(coordinate));
-                // tempBlocks.push_back(block);
                 this->addBlockToStart(block.id, block.mod);
 
                 std::this_thread::sleep_for(std::chrono::milliseconds(50));
                 mc.setBlock(coordinate, mcpp::BlockType(mcpp::Blocks::BLUE_CARPET));
+
+                //std::cout << "ping col" << std::endl;
             }
         }
     }
-    /**
-    for (auto &coord : tempCoords)
-    {
-        this->addCoordToStart(coord.clone());
-    }
-    for (auto &block : tempBlocks)
-    {
-        this->addBlockToStart(block.id, block.mod);
-    }
-    */
 }
 
 void Maze::restore()
