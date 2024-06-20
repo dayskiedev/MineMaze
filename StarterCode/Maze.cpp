@@ -67,20 +67,15 @@ void Maze::addBlockToStart(int id, int mod)
 
 void Maze::flattenTerrain()
 {
-    std::cout << "FLATTEN TERRAIN" << std::endl;
-    std::cout << "\n";
-
     mcpp::Coordinate cornerFromBase(basePoint.x + length + 2, basePoint.y, basePoint.z + width + 2);
 
+    /**
     std::cout << "BASEPOINT" << std::endl;
     print(basePoint);
     std::cout << "\n";
-
     std::cout << "CORNERPOINT" << std::endl;
     print(cornerFromBase);
     std::cout << "\n";
-
-    /**
     for (size_t i = 0; i < mc.getHeights(basePoint, cornerFromBase).size(); ++i)
     {
         for (size_t j = 0; j < mc.getHeights(basePoint, cornerFromBase)[i].size(); ++j)
@@ -120,6 +115,7 @@ void Maze::flattenTerrain()
                     // std::this_thread::sleep_for(std::chrono::milliseconds(50));
                     mc.setBlock(coordinate, block);
 
+                    /**
                     // TEST OUTPUT //
                     std::cout << "Coordinate ";
                     print(coordinate);
@@ -130,6 +126,7 @@ void Maze::flattenTerrain()
                     std::cout << "\n";
                     std::cout << "\n";
                     // TEST OUTPUT //
+                    */
 
                     ++level_yAxis;
                 }
@@ -141,15 +138,14 @@ void Maze::flattenTerrain()
                 while (level_yAxis != yAxis_diff)
                 {
                     mcpp::Coordinate coordinate((basePoint.x + axisIndex_x), (mc.getHeights(basePoint, cornerFromBase)[i][j] - level_yAxis), (basePoint.z + axisIndex_z));
-                    // tempCoords.push_back(coordinate);
                     this->addCoordToStart(coordinate.clone());
                     mcpp::BlockType block(mcpp::Blocks::AIR);
-                    // tempBlocks.push_back(block);
                     this->addBlockToStart(block.id, block.mod);
                     // std::this_thread::sleep_for(std::chrono::milliseconds(50));5
                     mc.setBlock(coordinate, block);
                     ++level_yAxis;
 
+                    /**
                     // TEST OUTPUT //
                     std::cout << "Coordinate ";
                     print(coordinate);
@@ -160,6 +156,7 @@ void Maze::flattenTerrain()
                     std::cout << "\n";
                     std::cout << "\n";
                     // TEST OUTPUT //
+                    */
                 }
             }
             ++axisIndex_z;
@@ -183,7 +180,6 @@ void Maze::buildMaze()
                     mcpp::Coordinate coordinate((basePoint.x + row + 1), (basePoint.y + i), (basePoint.z + col + 1));
                     this->addCoordToStart(coordinate.clone());
                     mcpp::BlockType block(mc.getBlock(coordinate));
-                    print(block);
                     this->addBlockToStart(block.id, block.mod);
 
                     std::this_thread::sleep_for(std::chrono::milliseconds(50));
@@ -199,8 +195,6 @@ void Maze::buildMaze()
 
                 std::this_thread::sleep_for(std::chrono::milliseconds(50));
                 mc.setBlock(coordinate, mcpp::BlockType(mcpp::Blocks::BLUE_CARPET));
-
-                //std::cout << "ping row" << std::endl;
             }
             else if ((this->mazeStructure[row][col] == '.') && (col == 0 || col == width - 1))
             {
@@ -211,8 +205,6 @@ void Maze::buildMaze()
 
                 std::this_thread::sleep_for(std::chrono::milliseconds(50));
                 mc.setBlock(coordinate, mcpp::BlockType(mcpp::Blocks::BLUE_CARPET));
-
-                //std::cout << "ping col" << std::endl;
             }
         }
     }
@@ -250,19 +242,4 @@ Maze::~Maze()
         delete temp;
         this->headBlock = nullptr;
     }
-}
-
-void Maze::print(mcpp::Coordinate &coord)
-{
-    std::cout << coord << std::endl;
-}
-
-void Maze::print(mcpp::BlockType &block)
-{
-    std::cout << block << std::endl;
-}
-
-void Maze::print(std::string &out)
-{
-    std::cout << out << std::endl;
 }
