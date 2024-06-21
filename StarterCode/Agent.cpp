@@ -153,16 +153,16 @@ void Agent::solveMaze(mcpp::Coordinate basePoint, int length, int width) {
     bCarpetFound = false; //Carpet not found
 
     boundary.x = basePoint.x + length;
-    boundary.y = basePoint.y + 3;
+    boundary.y = basePoint.y;
     boundary.z = basePoint.z + width;
 
     int boundaryX = boundary.x - pointLoc.x;
     int boundaryY = boundary.y - pointLoc.y;
     int boundaryZ = boundary.z - pointLoc.z;
 
-    if ((boundaryX > 0 && boundaryX < 8) && (boundaryZ > 0 && boundaryZ < 8) && (boundaryY > 0 && boundaryY < 2)) { //Check if player is within the maze
+    if ((boundaryX > 0 && boundaryX < (length - 1)) && (boundaryZ > 0 && boundaryZ < (width - 1)) && (boundaryY >= 0 && boundaryY < 2)) { //Check if player is within the maze
         while (!bCarpetFound) { // While blue carpet is not found, the below 'if' statements determine the direction to start
-            int vectorCounter = 0; 
+            int vectorCounter = 0;
             if (mc.getBlock(pointLoc + MOVE_ZPLUS) == mcpp::Blocks::AIR) {// Move to zPlus if it is empty 
                 zPlus(pointLoc, vectorCounter); 
             }
