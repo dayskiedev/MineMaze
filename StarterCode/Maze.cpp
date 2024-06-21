@@ -8,7 +8,7 @@
 Maze::Maze(bool mode)
 {
     if(mode) {
-        this->basePoint = mcpp::Coordinate(4848, 71, 4369 );
+        this->basePoint = mcpp::Coordinate(4848, 71, 4369);
     }
     this->mode = mode;
     this->length = 0;
@@ -67,7 +67,7 @@ void Maze::flattenTerrain() {
         int axisIndex_z = 0;
         for (size_t j = 0; j < mc.getHeights(basePoint, cornerFromBase)[i].size(); ++j) {
 
-            // IF TERRAIN IS LOWER THAN GROUND AT BASEPOINT
+            // if terrain is lower than ground at basePoint
             if (mc.getHeights(basePoint, cornerFromBase)[i][j] < (basePoint.y - 1)) {
                 int yAxis_diff = basePoint.y - mc.getHeights(basePoint, cornerFromBase)[i][j];
                 int level_yAxis = 0;
@@ -80,13 +80,12 @@ void Maze::flattenTerrain() {
                     mcpp::BlockType block = mc.getBlock(coordinate);
                     this->addBlockToStart(block.id, block.mod);
                     mcpp::BlockType setBlock(mc.getBlock(getBlockCoord));
-                    //std::this_thread::sleep_for(std::chrono::milliseconds(50));
                     mc.setBlock(coordinate, setBlock);
                     ++level_yAxis;
                 }
             }
 
-            // IF TERRAIN IS HIGHER THAN GROUND AT BASEPOINT
+            // if terrain is higher than ground at basePoint
             else if (mc.getHeights(basePoint, cornerFromBase)[i][j] > (basePoint.y -1)) {
                 int yAxis_diff = mc.getHeights(basePoint, cornerFromBase)[i][j] - (basePoint.y - 1);
                 int level_yAxis = 0;
@@ -97,12 +96,11 @@ void Maze::flattenTerrain() {
                     this->addCoordToStart(coordinate.clone());
                     mcpp::BlockType block = mc.getBlock(coordinate);
                     this->addBlockToStart(block.id, block.mod);
-                    //std::this_thread::sleep_for(std::chrono::milliseconds(50));
                     mc.setBlock(coordinate, mcpp::BlockType(mcpp::Blocks::AIR));
                     ++level_yAxis;
                 }
             }
-            // REMOVES SURFACE GRASS WITHIN MAZE AREA
+            // removes any surface debris (grass or snow) if within maze area
             else {
                 mcpp::Coordinate coordinate((basePoint.x + axisIndex_x), basePoint.y, (basePoint.z + axisIndex_z));
                 if(mc.getBlock(coordinate) == mcpp::BlockType(mcpp::Blocks::AIR)) {}
@@ -123,7 +121,7 @@ void Maze::buildMaze() {
 
         for (int col = 0; col < width; ++col) {
 
-            // PLACES ACACIA_WOOD_PLANKS
+            // Places ACACIA_WOOD_PLANKS
             if (this->mazeStructure[row][col] == 'x') {
                 for (int i = 0; i < 3; ++i) {
                     mcpp::Coordinate coordinate((basePoint.x + row + 1), (basePoint.y + i), (basePoint.z + col + 1));
@@ -135,7 +133,7 @@ void Maze::buildMaze() {
                 }
             }
 
-            // PLACES BLUE CARPET AT ENTRANCE
+            // Places BLUE_CARPET at entrance if entrance is within first or last row of mazeStructure
             else if ((this->mazeStructure[row][col] == '.') && (row == 0 || row == length -1)) {
                 mcpp::Coordinate coordinate((basePoint.x + row + 2), basePoint.y, (basePoint.z + col + 1));
                 this->addCoordToStart(coordinate.clone());
@@ -145,7 +143,7 @@ void Maze::buildMaze() {
                 mc.setBlock(coordinate, mcpp::BlockType(mcpp::Blocks::BLUE_CARPET));
             }
 
-            // PLACES BLUE CARPET AT ENTRANCE
+            // Places BLUE_CARPET at entrance if entrance is within first or last column of mazeStructure
             else if ((this->mazeStructure[row][col] == '.') && (col == 0 || col == width -1)) {
                 mcpp::Coordinate coordinate((basePoint.x + row + 1), basePoint.y, (basePoint.z + col + 2));
                 this->addCoordToStart(coordinate.clone());
@@ -172,7 +170,7 @@ void Maze::restore() {
 }
 
 Maze::~Maze() {
-    restore();
+    this->restore();
     while (headCoord != nullptr) {
         CoordNode *temp = headCoord;
         headCoord = headCoord->nextCoord;
