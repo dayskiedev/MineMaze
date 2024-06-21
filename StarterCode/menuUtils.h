@@ -20,8 +20,14 @@ bool sanatiseInput(int menuLen, int& num) {
             } // if input contains a string we dont want to treat it like a number
     }
     // if we get past this, it means what we entered must be a number, so we can safely convert the str to an int
-    int intInput = std::stoi(input);
-    if(intInput <= 0 || intInput >   menuLen) { 
+    int intInput = 0;
+    try{ intInput = std::stoi(input); }   
+    catch(const std::out_of_range& e) {
+        std::cout << "Input number out of range (too high)! "<< std::endl;
+        return false;
+    }
+
+    if(intInput <= 0 || intInput > menuLen) { 
         std::cout << "Input must be a number between 1 and " << menuLen << "!" << std::endl;
         return false; 
     }

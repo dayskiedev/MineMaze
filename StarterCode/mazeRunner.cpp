@@ -102,6 +102,7 @@ int main(int argc, char *argv[])
         if (curState == ST_Creators) {
             printTeamInfo();
             curState = ST_Main;
+            
         }
     }
     printExitMassage();
