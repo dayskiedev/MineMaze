@@ -7,16 +7,14 @@
 #include <iostream>
 #include <string>
 
-class CoordNode
-{
+class CoordNode {
 public:
     CoordNode(mcpp::Coordinate);
     mcpp::Coordinate coord;
     CoordNode *nextCoord;
 };
 
-class BlockNode
-{
+class BlockNode {
 public:
     BlockNode(int id, int modifier);
     int id;
@@ -24,8 +22,7 @@ public:
     BlockNode *nextBlock;
 };
 
-class Maze
-{
+class Maze {
 public:
     Maze(bool mode);
 
