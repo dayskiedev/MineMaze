@@ -73,14 +73,14 @@ void Maze::flattenTerrain()
 {
     mcpp::Coordinate cornerFromBase(basePoint.x + length + 1, basePoint.y, basePoint.z + width + 1);
 
-    ///**
+    /**
     std::cout << "BASEPOINT" << std::endl;
     std::cout << basePoint;
     std::cout << "\n";
     std::cout << "CORNERPOINT" << std::endl;
     std::cout << cornerFromBase;
     std::cout << "\n";
-    //*/
+    */
 
     int axisIndex_x = 0;
     for (size_t i = 0; i < mc.getHeights(basePoint, cornerFromBase).size(); ++i)
@@ -195,41 +195,43 @@ void Maze::buildMaze()
                 }
             }
             // PLACES BLUE CARPET AT ENTRANCE
-            else if ((this->mazeStructure[row][col] == '.') && (row == 0 || row == length))
+            else if ((this->mazeStructure[row][col] == '.') && (row == 0 || row == length -1))
             {
-                mcpp::Coordinate coordinate((basePoint.x + row + 1), basePoint.y, (basePoint.z + col + 1));
+                mcpp::Coordinate coordinate((basePoint.x + row + 2), basePoint.y, (basePoint.z + col + 1));
                 this->addCoordToStart(coordinate.clone());
                 mcpp::BlockType block(mc.getBlock(coordinate));
                 this->addBlockToStart(block.id, block.mod);
 
                 std::this_thread::sleep_for(std::chrono::milliseconds(50));
                 mc.setBlock(coordinate, mcpp::BlockType(mcpp::Blocks::BLUE_CARPET));
-
+                /**
                 std::cout << "Coordinate ";
                 std::cout << coordinate;
                 std::cout << "Block ";
                 std::cout << block;
                 std::cout << "\n";
                 std::cout << "ping col" << std::endl;
+                */
 
             }
             // PLACES BLUE CARPET AT ENTRANCE
-            else if ((this->mazeStructure[row][col] == '.') && (col == 0 || col == width))
+            else if ((this->mazeStructure[row][col] == '.') && (col == 0 || col == width -1))
             {
-                mcpp::Coordinate coordinate((basePoint.x + row + 1), basePoint.y, (basePoint.z + col + 1));
+                mcpp::Coordinate coordinate((basePoint.x + row + 1), basePoint.y, (basePoint.z + col + 2));
                 this->addCoordToStart(coordinate.clone());
                 mcpp::BlockType block(mc.getBlock(coordinate));
                 this->addBlockToStart(block.id, block.mod);
 
                 std::this_thread::sleep_for(std::chrono::milliseconds(50));
                 mc.setBlock(coordinate, mcpp::BlockType(mcpp::Blocks::BLUE_CARPET));
-
+                /**
                 std::cout << "Coordinate ";
                 std::cout << coordinate;
                 std::cout << "Block ";
                 std::cout << block;
                 std::cout << "\n";
                 std::cout << "ping row" << std::endl;
+                */
             }
         }
     }
