@@ -3,20 +3,13 @@
 #include <stdlib.h>
 #include <random>
 
-// describe class/what it does
-
-// TODO: 
-// make sure test mode walls generate at centre
-// fix validate mazw
-
 MazeUtil::MazeUtil(bool mode, bool enhance) {
      testmode = mode;
      enhancemode = enhance;
 }
 
-
 /// @brief 
-/// Code for creating the 2d array that will hold the maze Structure
+/// Code for creating the 2d array that will hold the maze Structure, has simple input validation so the user can only type odd numbers
 /// @return
 void MazeUtil::CreateStructure() {
     // get basepoint for maze
@@ -91,10 +84,7 @@ void MazeUtil::CreateStructureTerminal() {
             MazeStructure[i][j] = c;
         }
     }
-
-    if(enhancemode) {
-        ValidMaze();
-    }
+    if(enhancemode) { ValidMaze(); } // function for enhancment 3
 
     std::cout << "Maze read successfully!" << std::endl;
     PrintMazeInfo();
@@ -106,7 +96,6 @@ void MazeUtil::ValidMaze() {
         compArr[i] = new int[width];
     }
     for(int i = 0; i < length; ++i) { for(int j = 0; j < width; ++j) { compArr[i][j] = 0; } }
-    // fill with 0's
 
     // finding the entrance point for the maze to start the floodfills
     int startL = 0;
@@ -132,40 +121,10 @@ void MazeUtil::ValidMaze() {
         }
     }
 
-    if(testmode) {
-        std::cout << "before isolation check" << std::endl;
-        for(int i = 0; i < length; ++i) {
-            for(int j = 0; j < width; ++j) {
-                std::cout << MazeStructure[i][j] << " ";
-            }
-            std::cout << std::endl;
-        }
-    }
-
     CheckFloodFill(compArr, startL, startW, '.'); // checking that all '.'s are connected (to stop isolations)
-
-    if(testmode) {
-        std::cout << "removed isolations" << std::endl; 
-        for(int i = 0; i < length; ++i) {
-            for(int j = 0; j < width; ++j) {
-                std::cout << MazeStructure[i][j] << " ";
-            }
-            std::cout << std::endl;
-        }
-    }
 
     for(int i = 0; i < length; ++i) { for(int j = 0; j < width; ++j) { compArr[i][j] = 0; } }
     CheckFloodFill(compArr, 0, 0, 'x'); // then we check if all 'x's are connected (to stop loops)
-
-    if(testmode) { 
-        std::cout << "connected loops" << std::endl; 
-        for(int i = 0; i < length; ++i) {
-            for(int j = 0; j < width; ++j) {
-                std::cout << MazeStructure[i][j] << " ";
-            }
-            std::cout << std::endl;
-        }
-    }
 
     for(int x = 0; x < length; ++x) {
         delete[] compArr[x];
