@@ -27,10 +27,10 @@ public:
 class Maze
 {
 public:
-    Maze();
+    Maze(bool mode);
 
     void setFields(mcpp::Coordinate basePoint, int xlen,
-         int zlen, char **mazeStructure, bool mode);
+         int zlen, char **mazeStructure);
 
     void flattenTerrain();
 
@@ -45,9 +45,9 @@ private:
     mcpp::Coordinate basePoint;
     CoordNode *headCoord;
     BlockNode *headBlock;
+    bool mode;
     int length;
     int width;
-    bool mode;
     char **mazeStructure;
 
     // need to pass in the [[nodiscard]] Coordinate clone() const;
