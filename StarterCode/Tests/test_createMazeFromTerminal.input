@@ -6,8 +6,8 @@ xxxxxxxxx
 x.....x.x
 x.xxx.x.x
 x.x.x.x.x
-..xxx.xxx
-x.....x.x
+x.xxx.xxx
+x.....x..
 xxxxxxxxx
 5
 
@@ -29,3 +29,11 @@ x.xxx.xxx
 x.....x.x
 xxxxxxxxx
 
+2 - loop only
+xxxxxxxxx
+x........
+x.xxxxx.x
+x.x...x.x
+x.xxxxx.x
+x.......x
+xxxxxxxxx

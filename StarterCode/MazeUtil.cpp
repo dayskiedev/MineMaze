@@ -31,7 +31,6 @@ void MazeUtil::CreateStructure() {
     }
 
     basePoint = mc.getPlayerPosition();
-
     // make sure length and width are valid inputs (odd numbers)
     while(true) {
         std::cout << "Enter the length and width of the maze:" << std::endl; 
@@ -47,7 +46,6 @@ void MazeUtil::CreateStructure() {
             std::cout << "Length must be an odd number!" << std::endl;
             continue;
         }
-
         std::cin >> width;
         if(std::cin.good()) { input = true; }
         else {
@@ -63,7 +61,7 @@ void MazeUtil::CreateStructure() {
         }
         break;
     }
-
+    // create the 2d array that will hold the maze structure
     MazeStructure = new char*[length];
     for(int i = 0; i < length; i++) {
         MazeStructure[i] = new char[width];
@@ -102,21 +100,91 @@ void MazeUtil::CreateStructureTerminal() {
     PrintMazeInfo();
 }
 
+void MazeUtil::ValidMaze() {
+    int** compArr = new int*[length];
+    for(int i = 0; i < length; ++i) {
+        compArr[i] = new int[width];
+    }
+    for(int i = 0; i < length; ++i) { for(int j = 0; j < width; ++j) { compArr[i][j] = 0; } }
+    // fill with 0's
+
+    // finding the entrance point for the maze to start the floodfills
+    int startL = 0;
+    int startW = 0;
+    for(int i = 0; i < length; ++i) {
+        if(MazeStructure[i][0] == '.') {
+            startL = i;
+            startW = 0;
+        }
+        else if(MazeStructure[i][width-1] == '.') {
+            startL = i;
+            startW = width - 1;
+        }
+    };
+    for(int i = 0; i < width; ++i) {
+        if(MazeStructure[0][i] == '.') {
+            startL = 0;
+            startW = i;
+        }
+        else if(MazeStructure[length-1][i] == '.') {
+            startL = length-1;
+            startW = i;
+        }
+    }
+
+    if(testmode) {
+        std::cout << "before isolation check" << std::endl;
+        for(int i = 0; i < length; ++i) {
+            for(int j = 0; j < width; ++j) {
+                std::cout << MazeStructure[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    CheckFloodFill(compArr, startL, startW, '.'); // checking that all '.'s are connected (to stop isolations)
+
+    if(testmode) {
+        std::cout << "removed isolations" << std::endl; 
+        for(int i = 0; i < length; ++i) {
+            for(int j = 0; j < width; ++j) {
+                std::cout << MazeStructure[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    for(int i = 0; i < length; ++i) { for(int j = 0; j < width; ++j) { compArr[i][j] = 0; } }
+    CheckFloodFill(compArr, 0, 0, 'x'); // then we check if all 'x's are connected (to stop loops)
+
+    if(testmode) { 
+        std::cout << "connected loops" << std::endl; 
+        for(int i = 0; i < length; ++i) {
+            for(int j = 0; j < width; ++j) {
+                std::cout << MazeStructure[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    for(int x = 0; x < length; ++x) {
+        delete[] compArr[x];
+    }
+    delete[] compArr;
+}
+
 void MazeUtil::CheckFloodFill(int** arr, int sl, int sw, char c) {
     FloodFill(arr, sl, sw, c);
 
     for(int i = 0; i < length; ++i) {
         for(int j = 0; j < width; ++j) {
-            if(MazeStructure[i][j] == c && arr[i][j] == 0) {
-                // here we want to check if the current postion (found to be a . on a 0 space)
-                // is 1 spot away from a 1, (a . on a one space) if this is true, replace the
-                // ajacent wall with a . and repeat this function,flooding the area from where
-                // it was opened up
+            if(MazeStructure[i][j] == c && arr[i][j] == 0) {        
+                // here we want to check if the current postion (found to be a . on a 0 space) is 1 spot away from a 1, (a . on a one space) if this is true, replace the
+                // ajacent wall with a . and repeat this function,flooding the area from where it was opened up
                  if(i > 1 && arr[i - 2][j] == 1) { // up
-                    MazeStructure[i - 1][j] = c;
+                    MazeStructure[i - 1][j] = c; 
                     CheckFloodFill(arr, i-1, j, c);
                 }  
-
                 else if(i < length - 1 && arr[i + 2][j] == 1) { // down
                     MazeStructure[i + 1][j] = c;
                     CheckFloodFill(arr, i+1, j, c);
@@ -135,90 +203,12 @@ void MazeUtil::CheckFloodFill(int** arr, int sl, int sw, char c) {
     return;
 }
 
-void MazeUtil::ValidMaze() {
-    int** compArr = new int*[length];
-    for(int i = 0; i < length; ++i) {
-        compArr[i] = new int[width];
-    }
-    for(int i = 0; i < length; ++i) { for(int j = 0; j < width; ++j) { compArr[i][j] = 0; } }
-    // fill with 0's
-
-    // finding the entrance point for the maze to start the floodfills
-    int startL = 0;
-    int startW = 0;
-    for(int i = 0; i < length; ++i) {
-        if(MazeStructure[i][0] == '.') {
-            startL = i;
-            startW = 0;
-            break;
-        }
-        else if(MazeStructure[i][width-1] == '.') {
-            startL = i;
-            startW = width - 1;
-            break;
-        }
-    };
-    for(int i = 0; i < width; ++i) {
-        if(MazeStructure[0][i] == '.') {
-            startL = 0;
-            startW = i;
-            break;
-        }
-        else if(MazeStructure[length-1][i] == '.') {
-            startL = length-1;
-            startW = i;
-            break;
-        }
-    }
-
-    std::cout << "before isolation check" << std::endl;
-    for(int i = 0; i < length; ++i) {
-        for(int j = 0; j < width; ++j) {
-            std::cout << MazeStructure[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
-
-
-    CheckFloodFill(compArr, startL, startW, '.');
-    std::cout << "removed isolations" << std::endl; 
-    for(int i = 0; i < length; ++i) {
-        for(int j = 0; j < width; ++j) {
-            std::cout << MazeStructure[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
-
-
-    for(int i = 0; i < length; ++i) { for(int j = 0; j < width; ++j) { compArr[i][j] = 0; } }
-    // now that we have an open maze we need to check for any loops, and then connect the walls to stop
-    // these loops from ppearing
-    CheckFloodFill(compArr, 0, 0, 'x');
-
-    std::cout << "connected loops" << std::endl; 
-    for(int i = 0; i < length; ++i) {
-        for(int j = 0; j < width; ++j) {
-            std::cout << MazeStructure[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
-
-
-    for(int x = 0; x < length; ++x) {
-        delete[] compArr[x];
-    }
-    delete[] compArr;
-}
-
 void MazeUtil::FloodFill(int** compArr, int sl, int sw, char c) {
     if(sl < 0 || sw < 0 || sl >= length || sw >= width 
     || MazeStructure[sl][sw] != c || compArr[sl][sw] == 1) { return; }
-    // if current spot is not a dot we go back
-    // but we also need to make sure the spot isnt filled already
+    // if current spot is not a dot we go back but we also need to make sure the spot isnt filled already
     // this video helped with flood fill https://youtu.be/aehEcTEPtCs?si=4c3jc9xTELWiEXmG
-
     compArr[sl][sw] = 1;
-    // move onto 4 other directions
     FloodFill(compArr, sl - 1, sw, c); // up
     FloodFill(compArr, sl + 1, sw, c); // down
     FloodFill(compArr, sl, sw - 1, c); // left

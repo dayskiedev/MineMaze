@@ -29,9 +29,8 @@ int main(int argc, char *argv[])
         {
             if (!mode) { mode = compareCharStr(argv[i], "-testmode"); }
             if (!enhance) { enhance = compareCharStr(argv[i], "-enhance"); }
-        } // loops through every extra argument provided to see if they match either of these
-        // checks if they are false to then see if they are true, because the current input could be -enhance
-        //z and while testmode is already true this could otherwise set it back to false unintentionally
+        } // loops through every extra argument provided to see if they match either of these checks if they are false to then see if they are true, because the current input could be -enhance
+          // and while testmode is already true this could otherwise set it back to false unintentionally
     }
 
     if (!mode) { mc.postToChat("RUNNING IN NORMAL MODE"); }
@@ -52,16 +51,14 @@ int main(int argc, char *argv[])
     // State machine for menu
     while (curState != ST_Exit)
     {
-        if (curState == ST_Main)
-        {
+        if (curState == ST_Main) {
             do {
                 printMainMenu();
             } while (!sanatiseInput(5, stateNum));
             curState = States(stateNum);
         }
 
-        if (curState == ST_CreateMaze)
-        {
+        if (curState == ST_CreateMaze) {
             do {
                 printGenerateMazeMenu();
             } while (!sanatiseInput(3, stateNum));
@@ -73,8 +70,7 @@ int main(int argc, char *argv[])
             curState = ST_Main; // third option already takes us here so no nude for a third if statement
         }
 
-        if (curState == ST_BuildMaze)
-        {
+        if (curState == ST_BuildMaze) {
             std::cout << "BUILDING MAZE..." << std::endl;
             curState = ST_Main;
             maze.setFields(mu.getBasePoint().clone(), mu.getLength(), mu.getWidth(), mu.GetStructure(), mode);
@@ -83,8 +79,7 @@ int main(int argc, char *argv[])
             mazeExist = true; //Once maze is built, mazeExist is true
         }
 
-        if (curState == ST_SolveMaze)
-        {
+        if (curState == ST_SolveMaze) {
             do {
                 printSolveMazeMenu();
             } while (!sanatiseInput(3, stateNum));
@@ -104,8 +99,7 @@ int main(int argc, char *argv[])
             curState = ST_Main;
         }
 
-        if (curState == ST_Creators)
-        {
+        if (curState == ST_Creators) {
             printTeamInfo();
             curState = ST_Main;
         }
