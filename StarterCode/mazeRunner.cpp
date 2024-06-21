@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 
     MazeUtil mu(mode, enhance);
     Agent agent;
-    Maze maze;
+    Maze maze(mode);
 
     std::string input;
     States curState = ST_Main;
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
         if (curState == ST_BuildMaze) {
             std::cout << "BUILDING MAZE..." << std::endl;
             curState = ST_Main;
-            maze.setFields(mu.getBasePoint().clone(), mu.getLength(), mu.getWidth(), mu.GetStructure(), mode);
+            maze.setFields(mu.getBasePoint().clone(), mu.getLength(), mu.getWidth(), mu.GetStructure());
             maze.flattenTerrain();
             maze.buildMaze();
             mazeExist = true; //Once maze is built, mazeExist is true
